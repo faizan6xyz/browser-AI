@@ -158,11 +158,17 @@ if __name__ == "__main__":
     execute_automation(user_goal)
     print("\nRaw steps:", steps)
     print("\nHuman-readable steps:")
-    lasturl = "https://mail.google.com/mail/u/0/#inbox"
+    lasturl = ""
     for h in human:  # h is a list of strings
         print(f"- {h}")
     for h in human:  # h is a list of strings
-        if "click" in h or "go to" in h :
+        if "navigate" in h :
+            lasturl = h.strip().replace("navigate", "").strip()
+            run_agent(h,lasturl)
+        if "go" in h : 
+            lasturl = h.strip().replace("go to", "").strip()
+            run_agent(h,lasturl)
+        if "click" in h :
             lasturl = run_agent(h,lasturl)
         if "Search" in h :
             lasturl = run_agent1(h,lasturl)

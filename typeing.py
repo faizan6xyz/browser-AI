@@ -352,11 +352,6 @@ def run_agent2(goal: str, start_url: str):
     print(f"URL  : {start_url}")
     print("=" * 60)
 
-    import random
-    wait_time = random.uniform(1.5, 4.0)
-    mcp.call_tool("browser_navigate", {"url": start_url})
-    mcp.call_tool("browser_wait_for", {"time": wait_time})
-
     last_action_signature = ""
     for step in range(1, MAX_NAV_STEPS + 1):
         print(f"\n--- Step {step}: Planning ---")

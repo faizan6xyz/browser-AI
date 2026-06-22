@@ -305,22 +305,11 @@ def run_agent1(goal: str, start_url: str) -> str:
     print(f"URL  : {start_url}")
     print("=" * 60)
     
-    #  Step 1: Navigate 
-    print("\n--- Step 1: Navigate ---")
-    nav_result = mcp.call_tool("browser_navigate", {"url": start_url})
-    print(f"  ↩ {nav_result[:200]}")
-    mcp.call_tool("browser_wait_for", {"time": 2})
-    
     #  Step 2: Get Snapshot 
     print("\n--- Step 2: Snapshot ---")
     mcp.call_tool("browser_wait_for", {"time": 2})
     snapshot = mcp.call_tool("browser_snapshot", {})
     
-    # Fallbacks for empty snapshot
-    if not snapshot or snapshot == "Snapshot empty.":
-        path = extract_snapshot_path(nav_result)
-        if path:
-            snapshot = find_and_read_snapshot_file(os.path.basename(path))
     if not snapshot or snapshot == "Snapshot empty.":
         snapshot = find_and_read_latest_snapshot()
     if not snapshot:
