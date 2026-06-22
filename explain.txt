@@ -1,0 +1,26 @@
+workflow.py is the agent orchestrator , it decides the steps for the work to be done . it gives human readable answers 
+    it calls navigation.py for navigate , click , finish 
+    it calls searching.py for the searching
+    it calls typeing.py for the typing 
+    it calls Extract_text.py for the text extraction
+
+its not able to fill forms yet 
+
+but the problem is it keeps reconnecting 404 error , could be the mcp server problem or the endpoint problem
+
+the probable cuases for the 404 error is  :
+    1. --cdp-endpoint mode doesn't persist sessions properly
+
+        If you're launching the Playwright MCP server with --cdp-endpoint (connecting to an already-running Chrome via remote debugging, like your 9222 setup), this mode is known to not maintain server-side session state reliably across separate HTTP requests. The initialize call succeeds and hands you a session ID, but the very next request can fail to find that session because the underlying session store isn't actually persisting it in this connection mode. This matches the pattern you're seeing — works on handshake, 404s on the very first real tool call right after.
+
+    2. In-memory session store + a second/stale server process
+
+        Playwright MCP's session store typically lives in memory inside one running process. If there's a leftover/zombie MCP server process from a previous run still bound to port 3000 (or a dev server with auto-restart like nodemon watching for file changes), your initialize call might hit one process instance and your follow-up tools/call might land on a different one (after a restart) that has no record of that session ID. Worth checking: netstat -ano | findstr :3000 on Windows to confirm only one process is listening.
+        
+    3. Race between initialize and notifications/initialized
+
+        Your _handshake() fires the initialized notification as a separate POST right after the initialize response, without checking whether the server returned a new session ID on that second call. If the server rotates or re-confirms the session ID at that point and your client doesn't capture it, the session ID your client holds onto could already be one step stale before you ever make a real tool call.
+
+    4. Session timeout tuned very short server-side
+
+        Less likely given the 404 is immediate, but some MCP server configs apply a short idle timeout. Since there's no keepalive thread in your simplified extraction scripts (the agent version has one, the extraction scripts don't), if there's any delay between handshake and the first browser_navigate call, an aggressively short timeout could in theory cause this — though milliseconds-to-seconds gaps usually wouldn't trigger it.

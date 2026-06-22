@@ -1,0 +1,42 @@
+# Step 1 — Kill Chrome to prevent cookies lock 
+taskkill /F /IM chrome.exe /T
+
+# Step 2 — Recreate fresh where you store the account details isolated
+New-Item -ItemType Directory -Path "C:\chrome-debug" -Force
+
+# Step 3 — Copy correctly (note: destination is the PARENT, not the profile folder itself) - here we are copying the profile 23 
+Copy-Item "C:\Users\faiza\AppData\Local\Google\Chrome\User Data\Profile 23" `
+        "C:\chrome-debug\Profile 23" -Recurse -Force
+
+# Step 4 — Verify Cookies file exists 
+Test-Path "C:\chrome-debug\Profile 23\Cookies"
+
+# Must print: True
+
+
+
+
+# setup for the 9222 port (close all the chrome tab before running this)
+"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir=C:\chrome-debug --profile-directory="Profile 23" --no-first-run --no-default-browser-check
+
+
+
+
+# Now verify the the 9222 port of the chrome has opened 
+# paste this url on another browser if this give a json reponse means 9222 port is opened if not then i wouldn't be reached 
+http://127.0.0.1:9222/json/version
+
+
+# Manually login in once for the cookies and saving info (just login and your credential or just the browser id for automation)
+
+
+
+
+# now setup the Playwright MCP server  ( we are using HTTP one with 3000 as port )
+npx @playwright/mcp@latest --port 3000 --browser chromium --cdp-endpoint http://127.0.0.1:9222
+
+
+
+# then run your file Searching.py or Formfilling.py or other
+
+# make sure that Playwright MCP server and playwrightserver_HTTP.py store and access snapshot at same place 

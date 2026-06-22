@@ -1,0 +1,426 @@
+import json
+import os
+import glob
+import re
+import time
+import requests
+from openai import OpenAI
+import threading
+
+client = OpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key="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"
+)
+NIM_MODEL = "meta/llama-3.1-8b-instruct"
+MCP_BASE = "http://localhost:3000/mcp"
+MAX_NAV_STEPS = 3
+
+
+def extract_snapshot_path(text: str) -> str | None:
+    match = re.search(r"\[Snapshot\]\(([^)]+)\)", text)
+    return match.group(1) if match else None
+
+
+def find_and_read_snapshot_file(filename: str) -> str:
+    current_dir = os.getcwd()
+    while True:
+        candidate = os.path.join(current_dir, ".playwright-mcp", filename)
+        if os.path.exists(candidate):
+            time.sleep(0.2)
+            with open(candidate, "r", encoding="utf-8") as f:
+                return f.read()
+        parent = os.path.dirname(current_dir)
+        if parent == current_dir:
+            break
+        current_dir = parent
+    return ""
+
+
+def find_and_read_latest_snapshot() -> str:
+    current_dir = os.getcwd()
+    latest_file, latest_mtime = None, 0
+    while True:
+        pattern = os.path.join(current_dir, ".playwright-mcp", "page-*.yml")
+        for f in glob.glob(pattern):
+            mtime = os.path.getmtime(f)
+            if mtime > latest_mtime:
+                latest_mtime, latest_file = mtime, f
+        parent = os.path.dirname(current_dir)
+        if parent == current_dir:
+            break
+        current_dir = parent
+    if latest_file:
+        print(f"    [found snapshot file: {latest_file}]")
+        time.sleep(0.2)
+        with open(latest_file, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
+
+class MCPClient:
+    def __init__(self, base_url: str = MCP_BASE):
+        self.base_url = base_url
+        self._req_id = 0
+        self._session_id = None
+        self._tools = []
+        self._keepalive_thread = None
+        self._stop_keepalive = threading.Event()
+        self._lock = threading.Lock()
+
+    def _rpc(self, method: str, params: dict | None = None) -> dict:
+        with self._lock:
+            payload = {"jsonrpc": "2.0", "id": self._next_id(), "method": method}
+            if params:
+                payload["params"] = params
+            resp = self._do_post(payload)
+            if resp.status_code == 404:
+                print(f"[MCP] 404 body: {resp.text[:300]!r}")
+                print("[MCP] 404 — reconnecting...")
+                self._session_id = None
+                self._handshake()
+                resp = self._do_post(payload)
+            resp.raise_for_status()
+            if "mcp-session-id" in resp.headers:
+                self._session_id = resp.headers["mcp-session-id"]
+            return self._parse_sse(resp.text)
+
+    def _keepalive_loop(self):
+        """Send periodic pings to prevent session timeout"""
+        while not self._stop_keepalive.is_set():
+            try:
+                self._rpc("ping", {})
+            except Exception:
+                pass
+            self._stop_keepalive.wait(timeout=15)
+
+    def start(self):
+        self._handshake()
+        self._stop_keepalive.clear()
+        self._keepalive_thread = threading.Thread(target=self._keepalive_loop, daemon=True)
+        self._keepalive_thread.start()
+        print("[MCP] Handshake complete. Keepalive started.")
+
+    def stop(self):
+        self._stop_keepalive.set()
+        if self._keepalive_thread:
+            self._keepalive_thread.join(timeout=5)
+        print("[MCP] Done.")
+
+    def _next_id(self) -> int:
+        self._req_id += 1
+        return self._req_id
+
+    def _headers(self) -> dict:
+        h = {"Content-Type": "application/json",
+             "Accept": "application/json, text/event-stream"}
+        if self._session_id:
+            h["mcp-session-id"] = self._session_id
+        return h
+
+    def _parse_sse(self, text: str) -> dict:
+        results = []
+        for line in text.splitlines():
+            line = line.strip()
+            if not line.startswith("data:"):
+                continue
+            payload = line[5:].strip()
+            if not payload or payload == "[DONE]":
+                continue
+            try:
+                data = json.loads(payload)
+                if "error" in data:
+                    raise RuntimeError(f"MCP error: {data['error']}")
+                r = data.get("result", {})
+                if r:
+                    results.append(r)
+            except json.JSONDecodeError:
+                continue
+        merged = {}
+        for r in results:
+            merged.update(r)
+        return merged
+    def _do_post(self, payload: dict) -> requests.Response:
+        return requests.post(self.base_url, json=payload,
+                              headers=self._headers(), timeout=30)
+    def _handshake(self):
+        payload = {
+            "jsonrpc": "2.0", "id": self._next_id(),
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2024-11-05",
+                "capabilities": {},
+                "clientInfo": {"name": "nim-nav-agent", "version": "1.0"},
+            },
+        }
+        resp = self._do_post(payload)
+        resp.raise_for_status()
+        if "mcp-session-id" in resp.headers:
+            self._session_id = resp.headers["mcp-session-id"]
+        self._do_post({"jsonrpc": "2.0", "method": "notifications/initialized"})
+        print(f"[MCP] Session: {self._session_id}")
+    def _coerce_args(self, arguments: dict, tool_name: str) -> dict:
+        if tool_name == "browser_snapshot":
+            arguments.pop("filename", None)
+        schema = next((t["function"]["parameters"] for t in self._tools
+                        if t["function"]["name"] == tool_name), {})
+        props = schema.get("properties", {})
+        coerced = {}
+        for k, v in arguments.items():
+            etype = props.get(k, {}).get("type")
+            if etype == "boolean" and isinstance(v, str):
+                coerced[k] = v.lower() == "true"
+            elif etype == "number" and isinstance(v, str):
+                coerced[k] = float(v)
+            elif etype == "integer" and isinstance(v, str):
+                coerced[k] = int(v)
+            else:
+                coerced[k] = v
+        return coerced
+    def list_tools(self) -> list[dict]:
+        if self._tools:
+            return self._tools
+        result = self._rpc("tools/list")
+        allowed = {
+            "browser_navigate", "browser_snapshot", "browser_type",
+            "browser_click", "browser_press_key", "browser_wait_for",
+            "browser_scroll", "browser_navigate_back",
+        }
+        raw = [t for t in result.get("tools", []) if t["name"] in allowed]
+        self._tools = [
+            {"type": "function", "function": {
+                "name": t["name"],
+                "description": t.get("description", ""),
+                "parameters": t.get("inputSchema", {"type": "object", "properties": {}}),
+            }}
+            for t in raw
+        ]
+        print(f"[MCP] {len(self._tools)} tools exposed: "
+              f"{[t['function']['name'] for t in self._tools]}")
+        return self._tools
+
+    def call_tool(self, name: str, arguments: dict) -> str:
+        arguments = self._coerce_args(arguments, name)
+        print(f"    → {name}({json.dumps(arguments)[:150]})")
+        for attempt in range(3):
+            try:
+                result = self._rpc("tools/call", {"name": name, "arguments": arguments})
+                return self._process_result(name, result)
+            except Exception as e:
+                if "404" in str(e) or "Session not found" in str(e):
+                    print(f"    [WARN] Session lost (Attempt {attempt+1}). Reconnecting...")
+                    self._session_id = None
+                    self._handshake()
+                    time.sleep(2)
+                    continue
+                else:
+                    return f"### Error\n{str(e)}"
+        return "### Error\nFailed after multiple retries."
+
+    def _process_result(self, name: str, result: dict) -> str:
+        content = result.get("content", [])
+        parts = []
+        for c in content:
+            if c.get("type") == "text":
+                parts.append(c["text"])
+            elif c.get("type") == "resource" and "resource" in c:
+                res_text = c["resource"].get("text", "")
+                if res_text:
+                    parts.append(res_text)
+        text = "\n".join(parts) if parts else ""
+
+        if name == "browser_snapshot":
+            if text and len(text) > 20 and not text.startswith("### Snapshot"):
+                return text
+            if text:
+                path = extract_snapshot_path(text)
+                if path:
+                    file_content = find_and_read_snapshot_file(os.path.basename(path))
+                    if file_content:
+                        return file_content
+            return find_and_read_latest_snapshot() or "Snapshot empty."
+        return text if text else "OK"
+NAV_PLANNER_PROMPT = """You are a focused TYPING assistant for browser automation.
+You are given an accessibility tree snapshot of a webpage and a user instruction
+describing what text to type and into which element.
+
+Find the INPUT element the user is referring to.
+Look for elements with roles like 'combobox', 'textbox', 'searchbox', or 'input'.
+Match it to the element name or label mentioned in the user's instruction.
+Prefer elements marked [cursor=pointer] when multiple candidates could match.
+
+Extract:
+- ref: the EXACT ref string from the snapshot for the matching input element (e.g. "e42")
+- text: the exact text to type, taken verbatim from the instruction
+- submit: true if the instruction implies searching/submitting, else false
+
+Reply with ONLY this JSON object, nothing else:
+{"action": "type", "ref": "REF_FROM_SNAPSHOT", "text": "TEXT_TO_TYPE", "submit": true}
+
+If you cannot find a matching input element, reply with:
+{"action": "done", "ref": null, "text": null, "submit": false}
+"""
+
+
+def plan_navigation_step(goal: str, snapshot: str) -> dict:
+    try:
+        response = client.chat.completions.create(
+            model=NIM_MODEL,
+            messages=[
+                {"role": "system", "content": NAV_PLANNER_PROMPT},
+                {"role": "user", "content": f"Instruction: {goal}\n\nSnapshot:\n{snapshot[:15000]}"},
+            ],
+            max_tokens=200,
+            temperature=0,
+        )
+        raw = response.choices[0].message.content.strip()
+        raw = re.sub(r"^```json\s*|\s*```$", "", raw.strip())
+        return json.loads(raw)
+    except Exception as e:
+        print(f"    [ERROR] Planning failed: {e}")
+        return {"action": "done", "ref": None, "text": None, "submit": False}
+
+
+GOAL_CHECK_PROMPT = """You are an intelligent verification agent. 
+Your task is to determine if the user has ACTUALLY ARRIVED at the destination page they requested.
+
+User Goal: "{goal}"
+Current Page Snapshot: 
+{snapshot}
+
+CRITICAL VERIFICATION RULES:
+
+1. SIDEBAR vs. MAIN CONTENT (THE "GOOGLE DRIVE" RULE):
+   - Many apps (like Google Drive, Gmail, Outlook) have a permanent sidebar with links (e.g., "My Drive", "Bin", "Starred").
+   - **CRITICAL:** Seeing "Bin" in the sidebar/menu does NOT mean you are in the Bin. It just means the link exists.
+   - You are ONLY in the Bin if the **MAIN CONTENT AREA** (the large central part of the screen) shows deleted files, a "Empty Bin" button, or a heading that says "Bin" or "Trash".
+   - If the Main Content shows your regular files/folders, you are still on "My Drive", even if "Bin" is highlighted in the sidebar.
+
+2. URL PATH VERIFICATION:
+   - Check the URL in the snapshot.
+   - If Goal is "Bin": URL should contain "/trash", "/bin", or "/deleted".
+   - If URL is still "/my-drive" or "/drive/u/0/", you are NOT in the Bin.
+
+3. CONTENT VS. LINKS:
+   - If the goal is to "open" or "go to" a section, you must see the CONTENT of that section.
+   - Seeing a LINK or BUTTON that leads to the goal is NOT success.
+
+4. HOMEPAGE TRAP:
+   - If the snapshot shows a general feed, "Home", "Trending", or a search bar as the main focus, you are likely still on the Homepage. Return success: false.
+
+5. CONTENT VERIFICATION CHECKLIST:
+   - "Open Email": Look for a Sender Name, Subject Line, and Body Text in the main area. 
+     If these are present, you are NOT in the Inbox list anymore. You are in the email view.
+   - "Inbox List": Look for a list of rows with checkboxes and short summaries.
+
+DECISION PROCESS:
+1. Look at the URL. Does it match the goal? (e.g., /trash for Bin)
+2. Look at the Main Content Area (not the sidebar). What is displayed there?
+3. If Main Content shows regular files/folders → FAIL (Still on My Drive).
+4. If Main Content shows deleted items/empty state → SUCCESS.
+5. choose the ref where cursor=pointer is there
+
+Reply with ONLY a JSON object:
+{{"success": true/false, "reason": "Explain strictly. Mention the URL path and what is in the MAIN CONTENT area. If you only see a sidebar link, say 'Only saw sidebar link, main content is still [X]'."}}
+"""
+
+
+def check_goal_completion(goal: str, snapshot: str) -> dict:
+    content_snippet = snapshot[:8000]
+
+    response = client.chat.completions.create(
+        model=NIM_MODEL,
+        messages=[
+            {"role": "system", "content": GOAL_CHECK_PROMPT},
+            {"role": "user", "content": f"Goal: {goal}\n\nPage Content:\n{content_snippet}"},
+        ],
+        max_tokens=100,
+        temperature=0,
+    )
+    raw = response.choices[0].message.content.strip()
+    raw = re.sub(r"^```json\s*|\s*```$", "", raw.strip())
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return {"success": False, "reason": "Failed to parse LLM response"}
+
+
+def run_agent2(goal: str, start_url: str):
+    mcp = MCPClient()
+    mcp.start()
+    mcp.list_tools()
+    print(f"\nGoal : {goal}")
+    print(f"URL  : {start_url}")
+    print("=" * 60)
+
+    import random
+    wait_time = random.uniform(1.5, 4.0)
+    mcp.call_tool("browser_navigate", {"url": start_url})
+    mcp.call_tool("browser_wait_for", {"time": wait_time})
+
+    last_action_signature = ""
+    for step in range(1, MAX_NAV_STEPS + 1):
+        print(f"\n--- Step {step}: Planning ---")
+
+        # 1. Get Current State
+        snapshot = mcp.call_tool("browser_snapshot", {})
+        if not snapshot or snapshot == "Snapshot empty.":
+            snapshot = find_and_read_latest_snapshot()
+        if not snapshot:
+            print("STUCK: Could not get snapshot.")
+            break
+
+        # 2. Check if we are already done
+        status = check_goal_completion(goal, snapshot)
+        print(f"  [LLM Status]: Success={status.get('success')} | Reason: {status.get('reason', 'Unknown')}")
+
+        is_success = status.get("success", False)
+        if is_success:
+            reason_lower = status.get("reason", "").lower()
+            if "link" in reason_lower and not any(word in reason_lower for word in ["heading", "list", "content", "feed", "video"]):
+                print("  [SAFETY OVERRIDE] LLM confused a sidebar link with the destination page. Ignoring success.")
+                is_success = False
+
+        if is_success:
+            print(f"\n{'='*60}\nGOAL ACHIEVED: {status['reason']}\n{'='*60}")
+            break
+
+        # 3. Plan Next Move
+        plan = plan_navigation_step(goal, snapshot)
+        action = plan.get("action")
+
+        current_sig = f"{action}_{plan.get('ref', '')}_{plan.get('text', '')}"
+        if current_sig == last_action_signature:
+            print("  [LOOP DETECTED] Agent is repeating the same action. Stopping.")
+            break
+        last_action_signature = current_sig
+
+        print(f"  [Plan]: {action} - ref={plan.get('ref')} text={plan.get('text')}")
+
+        if action == "type":
+            ref = plan.get("ref")
+            text = plan.get("text")
+            submit = plan.get("submit", False)
+            if ref and text:
+                print(f"    → Typing '{text}' into {ref}")
+                mcp.call_tool("browser_type", {
+                    "element": "target input",
+                    "target": ref,
+                    "text": text,
+                    "slowly": False,
+                })
+                mcp.call_tool("browser_wait_for", {"time": 2})
+            else:
+                print("  [Error] Plan said type but missing ref or text.")
+        else:
+            print(f"  [Error] Unknown action: {action}")
+            break
+    else:
+        print("\nMax steps reached. Goal may not be achieved.")
+
+    mcp.stop()
+
+
+if __name__ == "__main__":
+    goal = input("Enter your goal : ").strip()
+    start_url = input("Starting URL    : ").strip()
+    run_agent2(goal, start_url)
