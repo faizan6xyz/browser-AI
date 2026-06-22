@@ -383,10 +383,6 @@ def run_agent(goal: str, start_url: str) -> str:
     current_url = start_url
     last_action_signature = "" 
     
-    # Initial Navigation
-    wait_time = random.uniform(1.5, 4.0)
-    mcp.call_tool("browser_navigate", {"url": start_url})
-    mcp.call_tool(f"browser_wait_for", {"time": wait_time})
     
     for step in range(1, MAX_NAV_STEPS + 1):
         print(f"\n--- Step {step}: Planning ---")
@@ -444,6 +440,7 @@ def run_agent(goal: str, start_url: str) -> str:
                 print(f"    → Pressing Enter to open selected item")
                 mcp.call_tool("browser_press_key", {"key": "Enter"})
                 mcp.call_tool("browser_wait_for", {"time": 3})
+                break 
             else:
                 print("  [Error] Plan said click but no ref provided.")   
                 
@@ -453,6 +450,7 @@ def run_agent(goal: str, start_url: str) -> str:
                 current_url = url # Optimistically update URL
                 mcp.call_tool("browser_navigate", {"url": url})
                 mcp.call_tool("browser_wait_for", {"time": 5})
+                break 
                 
         elif action == "done":
             print(f"  [Agent decided]: Done. Success: {plan.get('success')}")

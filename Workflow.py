@@ -164,10 +164,10 @@ if __name__ == "__main__":
     for h in human:  # h is a list of strings
         if "navigate" in h :
             lasturl = h.strip().replace("navigate", "").strip()
-            run_agent(h,lasturl)
+            navi(lasturl)
         if "go" in h : 
             lasturl = h.strip().replace("go to", "").strip()
-            run_agent(h,lasturl)
+            navi(lasturl)
         if "click" in h :
             lasturl = run_agent(h,lasturl)
         if "Search" in h :
