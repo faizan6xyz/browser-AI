@@ -1,0 +1,356 @@
+2026-06-14 01:32:50,920 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:32:52,262 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:33:55,239 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:33:55,387 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:33:55,534 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:33:55,878 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:33:56,467 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:36:05,325 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:36:05,733 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:36:05,773 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:36:06,181 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:36:06,622 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:36:57,471 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:36:57,511 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:36:57,513 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:36:57,957 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:36:58,079 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:41:50,141 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:41:50,147 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:41:50,189 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:41:50,590 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:41:51,308 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:51:31,534 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:51:31,551 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:51:31,561 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:51:31,917 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:51:32,550 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 01:52:08,590 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 01:52:08,656 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-14 01:52:08,673 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-14 01:52:08,981 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-14 01:52:09,411 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 02:40:57,818 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 02:40:59,250 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-14 02:42:22,845 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-14 02:42:24,040 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-16 04:35:57,931 [INFO] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+2026-06-16 04:35:58,237 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-16 04:35:59,466 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-16 04:37:46,784 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-16 04:37:48,320 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-16 04:39:08,500 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:09,171 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:10,037 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:10,653 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:11,370 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:16,384 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:17,327 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:18,024 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:19,057 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:19,877 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:20,900 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:21,720 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:39:22,735 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:41:21,052 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-16 04:41:21,252 [INFO] HTTP Request: GET http://127.0.0.1:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
+2026-06-16 04:41:21,411 [INFO] HTTP Request: HEAD http://127.0.0.1:7860/ "HTTP/1.1 200 OK"
+2026-06-16 04:41:21,780 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-06-16 04:41:22,186 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-16 04:42:21,396 [INFO]  Goal      : delete MSIafterburner folder from the downloads 
+2026-06-16 04:42:21,397 [INFO]  Directory : C:\Users\faiza\Downloads
+2026-06-16 04:42:21,398 [INFO]  Model     : meta/llama-3.1-8b-instruct
+2026-06-16 04:42:21,398 [INFO] ============================================================
+2026-06-16 04:42:21,398 [INFO]  Asking AI what to do...
+2026-06-16 04:42:23,066 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:42:23,079 [INFO] 
+── Step 1 ──
+2026-06-16 04:42:23,081 [INFO]  Action  : list_files
+2026-06-16 04:42:23,081 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads"}
+2026-06-16 04:42:23,081 [INFO]  Reason  : Verify the existence and contents of the MSIafterburner folder before deleting it
+2026-06-16 04:42:23,097 [INFO]  Result  :
+C:\Users\faiza\Downloads\1000-most-common-words.txt [5.7 KB] [.txt]
+C:\Users\faiza\Downloads\AI_Deep_Dive (1).pptx [486.3 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pdf [747.8 KB] [.pdf]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pptx [966.4 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Engineer_Roadmap.txt [2.6 KB] [.txt]
+C:\Users\faiza\Downloads\Antigravity-x64.exe [140414.6 KB] [.exe]
+C:\Users\faiza\Downloads\Backup-codes-faizanclaudeuser1.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\Backup-codes-faizankhankharakman.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\claude_counter_explainer.pptx [111.0 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_reasoning.pptx [249.8 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_skills.pptx [283.9 KB] [.pptx]
+C:\Users\faiza\Downloads\Codex Installer.exe [1264.6 KB] [.exe]
+C:\Users\faiza\Downloads\CursorUserSetup-x64-3.6.21.exe [180900.8 KB] [.exe]
+C:\Users\faiza\Downloads\deep_learning_neural_network_glossary.md [45.0 KB] [.md]
+C:\Users\faiza\Downloads\desktop.ini [0.8 KB] [.ini]
+C:\Users\faiza\Downloads\encoding_and_embeddings.md [4.5 KB] [.md]
+C:\Users\faiza\Downloads\EPORNER.COM - [3IKQmz0qRUN] INDIAN Angry Wife wants SEX HINDI AUDIO (720).mp4 [131168.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bjl6poNUGoE] Matured woman the perfect tutor for black student (720).mp4 [664919.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bmWNp0eB4Su] Wife And Husband Celibrate Their 20th Anniversery 3 (720).mp4 [464188.4 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [dd5dQ3wSrvA] Indian devar bhabi fucking (480).mp4 [136875.9 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [iPg68LcNSXZ] Petite Cutie (720).mp4 [350016.6 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Ls2aiZsBSMj] Family Screw.mp4 [2147759.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Mlwy562HvAz] Desi bhabhi with devar (360).mp4 [7916.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [nUKOEfRIwTg] Student Apni Sexy Teacher Ko Karne Laga Pyar Aur Ek Din Bo   le Ki Mujhe Aapke Sath Sex Karna Hai Teacher Man Gai Au mp4 (720).mp4 [454324.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [pZZYVTQHbFc] Anal Wife (720).mp4 [78459.5 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [yZi9Ge4Q3Sg] Amateur Hardcore Cole (720).mp4 [160020.2 KB] [.mp4]
+C:\Users\faiza\Downloads\faizan_khan resume (1).docx [90.5 KB] [.docx]
+C:\Users\faiza\Downloads\Faizan_Khan_Resume.docx [37.7 KB] [.docx]
+C:\Users\faiza\Downloads\llm_decoding_strategies.md [12.3 KB] [.md]
+C:\Users\faiza\Downloads\NIPS-2017-attention-is-all-you-need-Paper.pdf [556.1 KB] [.pdf]
+C:\Users\faiza\Downloads\RAG explaination.txt [2.0 KB] [.txt]
+C:\Users\faiza\Downloads\sign_mnist_test.csv [21267.1 KB] [.csv]
+C:\Users\faiza\Downloads\sign_mnist_train.csv [81329.2 KB] [.csv]
+C:\Users\faiza\Downloads\Statistics_Used_in_AI.pdf [31.3 KB] [.pdf]
+C:\Users\faiza\Downloads\WhatsApp Image 2026-06-13 at 6.10.51 AM.jpeg [651.6 KB] [.jpeg]
+C:\Users\faiza\Downloads\WindsurfUserSetup-x64-2.3.15.exe [211770.1 KB] [.exe]
+C:\Users\faiza\Downloads\~$S Question Bank Mid Term.docx [0.2 KB] [.docx]
+C:\Users\faiza\Downloads\MSIAfterburnerSetup\MSIAfterburnerInstaller466.exe [43486.1 KB] [.exe]
+2026-06-16 04:42:23,098 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:42:23,783 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:42:23,786 [INFO] 
+── Step 2 ──
+2026-06-16 04:42:23,786 [INFO]  Action  : list_files
+2026-06-16 04:42:23,787 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads\\MSIAfterburner"}
+2026-06-16 04:42:23,787 [INFO]  Reason  : Verify the existence and contents of the MSIafterburner folder before deleting it
+2026-06-16 04:42:23,788 [INFO]  Result  :
+ERROR: Directory 'C:\Users\faiza\Downloads\MSIAfterburner' does not exist.
+2026-06-16 04:42:23,788 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:42:24,401 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:42:24,402 [INFO] 
+── Step 3 ──
+2026-06-16 04:42:24,403 [INFO]  Action  : list_files
+2026-06-16 04:42:24,404 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads"}
+2026-06-16 04:42:24,404 [INFO]  Reason  : Verify the existence and contents of the Downloads directory before deleting the MSIafterburner folder
+2026-06-16 04:42:24,408 [INFO]  Result  :
+C:\Users\faiza\Downloads\1000-most-common-words.txt [5.7 KB] [.txt]
+C:\Users\faiza\Downloads\AI_Deep_Dive (1).pptx [486.3 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pdf [747.8 KB] [.pdf]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pptx [966.4 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Engineer_Roadmap.txt [2.6 KB] [.txt]
+C:\Users\faiza\Downloads\Antigravity-x64.exe [140414.6 KB] [.exe]
+C:\Users\faiza\Downloads\Backup-codes-faizanclaudeuser1.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\Backup-codes-faizankhankharakman.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\claude_counter_explainer.pptx [111.0 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_reasoning.pptx [249.8 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_skills.pptx [283.9 KB] [.pptx]
+C:\Users\faiza\Downloads\Codex Installer.exe [1264.6 KB] [.exe]
+C:\Users\faiza\Downloads\CursorUserSetup-x64-3.6.21.exe [180900.8 KB] [.exe]
+C:\Users\faiza\Downloads\deep_learning_neural_network_glossary.md [45.0 KB] [.md]
+C:\Users\faiza\Downloads\desktop.ini [0.8 KB] [.ini]
+C:\Users\faiza\Downloads\encoding_and_embeddings.md [4.5 KB] [.md]
+C:\Users\faiza\Downloads\EPORNER.COM - [3IKQmz0qRUN] INDIAN Angry Wife wants SEX HINDI AUDIO (720).mp4 [131168.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bjl6poNUGoE] Matured woman the perfect tutor for black student (720).mp4 [664919.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bmWNp0eB4Su] Wife And Husband Celibrate Their 20th Anniversery 3 (720).mp4 [464188.4 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [dd5dQ3wSrvA] Indian devar bhabi fucking (480).mp4 [136875.9 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [iPg68LcNSXZ] Petite Cutie (720).mp4 [350016.6 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Ls2aiZsBSMj] Family Screw.mp4 [2147759.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Mlwy562HvAz] Desi bhabhi with devar (360).mp4 [7916.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [nUKOEfRIwTg] Student Apni Sexy Teacher Ko Karne Laga Pyar Aur Ek Din Bo   le Ki Mujhe Aapke Sath Sex Karna Hai Teacher Man Gai Au mp4 (720).mp4 [454324.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [pZZYVTQHbFc] Anal Wife (720).mp4 [78459.5 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [yZi9Ge4Q3Sg] Amateur Hardcore Cole (720).mp4 [160020.2 KB] [.mp4]
+C:\Users\faiza\Downloads\faizan_khan resume (1).docx [90.5 KB] [.docx]
+C:\Users\faiza\Downloads\Faizan_Khan_Resume.docx [37.7 KB] [.docx]
+C:\Users\faiza\Downloads\llm_decoding_strategies.md [12.3 KB] [.md]
+C:\Users\faiza\Downloads\NIPS-2017-attention-is-all-you-need-Paper.pdf [556.1 KB] [.pdf]
+C:\Users\faiza\Downloads\RAG explaination.txt [2.0 KB] [.txt]
+C:\Users\faiza\Downloads\sign_mnist_test.csv [21267.1 KB] [.csv]
+C:\Users\faiza\Downloads\sign_mnist_train.csv [81329.2 KB] [.csv]
+C:\Users\faiza\Downloads\Statistics_Used_in_AI.pdf [31.3 KB] [.pdf]
+C:\Users\faiza\Downloads\WhatsApp Image 2026-06-13 at 6.10.51 AM.jpeg [651.6 KB] [.jpeg]
+C:\Users\faiza\Downloads\WindsurfUserSetup-x64-2.3.15.exe [211770.1 KB] [.exe]
+C:\Users\faiza\Downloads\~$S Question Bank Mid Term.docx [0.2 KB] [.docx]
+C:\Users\faiza\Downloads\MSIAfterburnerSetup\MSIAfterburnerInstaller466.exe [43486.1 KB] [.exe]
+2026-06-16 04:42:24,409 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:42:25,318 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:42:25,319 [INFO] 
+── Step 4 ──
+2026-06-16 04:42:25,319 [INFO]  Action  : search_files
+2026-06-16 04:42:25,319 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads", "keyword": "MSIAfterburner"}
+2026-06-16 04:42:25,321 [INFO]  Reason  : Verify the existence of the MSIafterburner folder before deleting it
+2026-06-16 04:42:25,322 [INFO]  Result  :
+C:\Users\faiza\Downloads\MSIAfterburnerSetup\MSIAfterburnerInstaller466.exe
+2026-06-16 04:42:25,322 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:42:26,137 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:42:26,138 [INFO] 
+── Step 5 ──
+2026-06-16 04:42:26,140 [INFO]  Action  : move_file
+2026-06-16 04:42:26,140 [INFO]  Args    : {"src": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup\\MSIAfterburnerInstaller466.exe", "dst": "C:\\Users\\faiza\\Downloads\\Deleted\\MSIAfterburnerInstaller466.exe"}
+2026-06-16 04:42:26,140 [INFO]  Reason  : Move the MSIafterburner folder to the Deleted directory before deleting it
+2026-06-16 04:42:26,140 [INFO] 
+┌─────────────────────────────────────────┐
+│  THIS  ACTION REQUIRES YOUR APPROVAL       │
+├─────────────────────────────────────────┤
+│  Action  : move_file                     │
+│  Args    : {"src": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup\\MSIAfterburnerInstaller466.exe", "dst": "C:\\Users\\faiza\\Downloads\\Deleted\\MSIAfterburnerInstaller466.exe"}│
+├─────────────────────────────────────────┤
+│  What will happen:                      │
+│  Move the MSIafterburner folder to the Deleted directory│
+└─────────────────────────────────────────┘
+
+Do you want to proceed?
+2026-06-16 04:43:11,311 [INFO]  Skipped by user: move_file
+2026-06-16 04:43:11,311 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:12,012 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:12,014 [INFO] 
+── Step 6 ──
+2026-06-16 04:43:12,015 [INFO]  Action  : find_duplicates
+2026-06-16 04:43:12,015 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads"}
+2026-06-16 04:43:12,015 [INFO]  Reason  : Verify if there are any duplicate files in the Downloads directory before deleting the MSIafterburner folder
+2026-06-16 04:43:12,016 [INFO]  Result  :
+No duplicate filenames found.
+2026-06-16 04:43:12,017 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:13,446 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:13,449 [INFO] 
+── Step 7 ──
+2026-06-16 04:43:13,449 [INFO]  Action  : list_files
+2026-06-16 04:43:13,450 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup"}
+2026-06-16 04:43:13,450 [INFO]  Reason  : Verify the existence and contents of the MSIafterburner folder before deleting it
+2026-06-16 04:43:13,450 [INFO]  Result  :
+C:\Users\faiza\Downloads\MSIAfterburnerSetup\MSIAfterburnerInstaller466.exe [43486.1 KB] [.exe]
+2026-06-16 04:43:13,451 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:16,011 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:16,013 [INFO] 
+── Step 8 ──
+2026-06-16 04:43:16,013 [INFO]  Action  : delete_file
+2026-06-16 04:43:16,014 [INFO]  Args    : {"path": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup"}
+2026-06-16 04:43:16,014 [INFO]  Reason  : Delete the MSIafterburner folder as per the goal
+2026-06-16 04:43:16,015 [INFO] 
+┌─────────────────────────────────────────┐
+│  THIS  ACTION REQUIRES YOUR APPROVAL       │
+├─────────────────────────────────────────┤
+│  Action  : delete_file                   │
+│  Args    : {"path": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup"}│
+├─────────────────────────────────────────┤
+│  What will happen:                      │
+│  Permanently delete the MSIafterburner folder from the Downloads directory│
+└─────────────────────────────────────────┘
+
+Do you want to proceed?
+2026-06-16 04:43:27,326 [INFO]  Goal      : delete MSIAfterburnerSetup folder from the downloads 
+2026-06-16 04:43:27,327 [INFO]  Directory : C:\Users\faiza\Downloads
+2026-06-16 04:43:27,327 [INFO]  Model     : meta/llama-3.1-8b-instruct
+2026-06-16 04:43:27,327 [INFO] ============================================================
+2026-06-16 04:43:27,328 [INFO]  Asking AI what to do...
+2026-06-16 04:43:28,192 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:28,194 [INFO] 
+── Step 1 ──
+2026-06-16 04:43:28,195 [INFO]  Action  : search_files
+2026-06-16 04:43:28,195 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads", "keyword": "MSIAfterburnerSetup"}
+2026-06-16 04:43:28,196 [INFO]  Reason  : Need to confirm the path of the folder to delete
+2026-06-16 04:43:28,197 [INFO]  Result  :
+No files found matching 'MSIAfterburnerSetup'.
+2026-06-16 04:43:28,197 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:28,808 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:28,811 [INFO] 
+── Step 2 ──
+2026-06-16 04:43:28,811 [INFO]  Action  : list_files
+2026-06-16 04:43:28,811 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads"}
+2026-06-16 04:43:28,811 [INFO]  Reason  : Need to confirm the path of the folder to delete
+2026-06-16 04:43:28,816 [INFO]  Result  :
+C:\Users\faiza\Downloads\1000-most-common-words.txt [5.7 KB] [.txt]
+C:\Users\faiza\Downloads\AI_Deep_Dive (1).pptx [486.3 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pdf [747.8 KB] [.pdf]
+C:\Users\faiza\Downloads\AI_Deep_Dive.pptx [966.4 KB] [.pptx]
+C:\Users\faiza\Downloads\AI_Engineer_Roadmap.txt [2.6 KB] [.txt]
+C:\Users\faiza\Downloads\Antigravity-x64.exe [140414.6 KB] [.exe]
+C:\Users\faiza\Downloads\Backup-codes-faizanclaudeuser1.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\Backup-codes-faizankhankharakman.txt [0.4 KB] [.txt]
+C:\Users\faiza\Downloads\claude_counter_explainer.pptx [111.0 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_reasoning.pptx [249.8 KB] [.pptx]
+C:\Users\faiza\Downloads\claude_skills.pptx [283.9 KB] [.pptx]
+C:\Users\faiza\Downloads\Codex Installer.exe [1264.6 KB] [.exe]
+C:\Users\faiza\Downloads\CursorUserSetup-x64-3.6.21.exe [180900.8 KB] [.exe]
+C:\Users\faiza\Downloads\deep_learning_neural_network_glossary.md [45.0 KB] [.md]
+C:\Users\faiza\Downloads\desktop.ini [0.8 KB] [.ini]
+C:\Users\faiza\Downloads\encoding_and_embeddings.md [4.5 KB] [.md]
+C:\Users\faiza\Downloads\EPORNER.COM - [3IKQmz0qRUN] INDIAN Angry Wife wants SEX HINDI AUDIO (720).mp4 [131168.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bjl6poNUGoE] Matured woman the perfect tutor for black student (720).mp4 [664919.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [bmWNp0eB4Su] Wife And Husband Celibrate Their 20th Anniversery 3 (720).mp4 [464188.4 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [dd5dQ3wSrvA] Indian devar bhabi fucking (480).mp4 [136875.9 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [iPg68LcNSXZ] Petite Cutie (720).mp4 [350016.6 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Ls2aiZsBSMj] Family Screw.mp4 [2147759.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [Mlwy562HvAz] Desi bhabhi with devar (360).mp4 [7916.2 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [nUKOEfRIwTg] Student Apni Sexy Teacher Ko Karne Laga Pyar Aur Ek Din Bo   le Ki Mujhe Aapke Sath Sex Karna Hai Teacher Man Gai Au mp4 (720).mp4 [454324.3 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [pZZYVTQHbFc] Anal Wife (720).mp4 [78459.5 KB] [.mp4]
+C:\Users\faiza\Downloads\EPORNER.COM - [yZi9Ge4Q3Sg] Amateur Hardcore Cole (720).mp4 [160020.2 KB] [.mp4]
+C:\Users\faiza\Downloads\faizan_khan resume (1).docx [90.5 KB] [.docx]
+C:\Users\faiza\Downloads\Faizan_Khan_Resume.docx [37.7 KB] [.docx]
+C:\Users\faiza\Downloads\llm_decoding_strategies.md [12.3 KB] [.md]
+C:\Users\faiza\Downloads\NIPS-2017-attention-is-all-you-need-Paper.pdf [556.1 KB] [.pdf]
+C:\Users\faiza\Downloads\RAG explaination.txt [2.0 KB] [.txt]
+C:\Users\faiza\Downloads\sign_mnist_test.csv [21267.1 KB] [.csv]
+C:\Users\faiza\Downloads\sign_mnist_train.csv [81329.2 KB] [.csv]
+C:\Users\faiza\Downloads\Statistics_Used_in_AI.pdf [31.3 KB] [.pdf]
+C:\Users\faiza\Downloads\WhatsApp Image 2026-06-13 at 6.10.51 AM.jpeg [651.6 KB] [.jpeg]
+C:\Users\faiza\Downloads\WindsurfUserSetup-x64-2.3.15.exe [211770.1 KB] [.exe]
+C:\Users\faiza\Downloads\~$S Question Bank Mid Term.docx [0.2 KB] [.docx]
+C:\Users\faiza\Downloads\MSIAfterburnerSetup\MSIAfterburnerInstaller466.exe [43486.1 KB] [.exe]
+2026-06-16 04:43:28,816 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:29,729 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:29,731 [INFO] 
+── Step 3 ──
+2026-06-16 04:43:29,731 [INFO]  Action  : move_file
+2026-06-16 04:43:29,731 [INFO]  Args    : {"src": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup", "dst": "C:\\Users\\faiza\\Downloads\\.msiafterburnersetup"}
+2026-06-16 04:43:29,731 [INFO]  Reason  : Need to delete the MSIAfterburnerSetup folder, so moving it to a temporary location first
+2026-06-16 04:43:29,732 [INFO] 
+┌─────────────────────────────────────────┐
+│  THIS  ACTION REQUIRES YOUR APPROVAL       │
+├─────────────────────────────────────────┤
+│  Action  : move_file                     │
+│  Args    : {"src": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup", "dst": "C:\\Users\\faiza\\Downloads\\.msiafterburnersetup"}│
+├─────────────────────────────────────────┤
+│  What will happen:                      │
+│  Move the MSIAfterburnerSetup folder to a temporary location│
+└─────────────────────────────────────────┘
+
+Do you want to proceed?
+2026-06-16 04:43:58,805 [INFO]  Skipped by user: move_file
+2026-06-16 04:43:58,806 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:43:59,632 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:43:59,634 [INFO] 
+── Step 4 ──
+2026-06-16 04:43:59,635 [INFO]  Action  : find_duplicates
+2026-06-16 04:43:59,635 [INFO]  Args    : {"directory": "C:\\Users\\faiza\\Downloads"}
+2026-06-16 04:43:59,635 [INFO]  Reason  : Need to confirm if there are any duplicate files in the downloads directory
+2026-06-16 04:43:59,637 [INFO]  Result  :
+No duplicate filenames found.
+2026-06-16 04:43:59,637 [INFO] 
+ Asking AI what to do next...
+2026-06-16 04:44:00,861 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:44:00,863 [INFO] 
+── Step 5 ──
+2026-06-16 04:44:00,864 [INFO]  Action  : delete_file
+2026-06-16 04:44:00,864 [INFO]  Args    : {"path": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup"}
+2026-06-16 04:44:00,865 [INFO]  Reason  : Goal is to delete the MSIAfterburnerSetup folder from the downloads directory
+2026-06-16 04:44:00,866 [INFO] 
+┌─────────────────────────────────────────┐
+│  THIS  ACTION REQUIRES YOUR APPROVAL       │
+├─────────────────────────────────────────┤
+│  Action  : delete_file                   │
+│  Args    : {"path": "C:\\Users\\faiza\\Downloads\\MSIAfterburnerSetup"}│
+├─────────────────────────────────────────┤
+│  What will happen:                      │
+│  Permanently delete the MSIAfterburnerSetup folder from the downloads directory│
+└─────────────────────────────────────────┘
+
+Do you want to proceed?
+2026-06-16 04:48:18,403 [INFO] HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-initiated-analytics "HTTP/1.1 200 OK"
+2026-06-16 04:48:19,284 [INFO] HTTP Request: GET https://api.gradio.app/pkg-version "HTTP/1.1 200 OK"
+2026-06-16 04:50:08,177 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:50:08,858 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:50:10,342 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:50:29,785 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-16 04:50:46,188 [INFO] MOVED: C:\Users\faiza\Downloads\MSIAfterburnerSetup → C:\Users\faiza\Desktop
+2026-06-16 04:50:46,988 [INFO] HTTP Request: POST https://integrate.api.nvidia.com/v1/chat/completions "HTTP/1.1 200 OK"

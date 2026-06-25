@@ -1,0 +1,5 @@
+                    offline_management.py                          offline_management_simple.py
+State               dict with 8 keys                               Just history and step as local variables
+Printing            Formatted boxes, labels, separators            Single print per step
+Approval prompt     Shows action, args, impact in a table          One line
+Skip/Stop options   y / n / stop                                    y / n only
