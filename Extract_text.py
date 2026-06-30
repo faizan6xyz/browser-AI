@@ -7,9 +7,14 @@ import requests
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+API_key = os.getenv("API_key")
+
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"
+    api_key=API_key 
 )
 NIM_MODEL = "meta/llama-3.1-8b-instruct"
 MCP_BASE = "http://localhost:3000/mcp"

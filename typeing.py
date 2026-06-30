@@ -6,10 +6,14 @@ import time
 import requests
 from openai import OpenAI
 import threading
+from dotenv import load_dotenv
+
+load_dotenv()
+API_key = os.getenv("API_key")
 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"
+    api_key=API_key 
 )
 NIM_MODEL = "meta/llama-3.1-8b-instruct"
 MCP_BASE = "http://localhost:3000/mcp"

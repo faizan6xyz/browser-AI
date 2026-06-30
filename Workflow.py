@@ -6,11 +6,15 @@ from Searching import run_agent1
 from Extract_text import extract_page_to_markdown
 from Navigation import run_agent
 from typeing import run_agent2
-    
-MODEL_NAME = "meta/llama-3.3-70b-instruct" # Or another suitable reasoning model
+from dotenv import load_dotenv
+MODEL_NAME = "meta/llama-3.3-70b-instruct"
+
+load_dotenv()
+API_key = os.getenv("API_key")
+
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"
+    api_key=API_key 
 )
 def get_next_step(goal, current_state, previous_steps):
     system_prompt = """
