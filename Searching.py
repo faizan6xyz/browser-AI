@@ -14,7 +14,6 @@ NIM_MODEL    = "meta/llama-3.1-8b-instruct"
 MCP_BASE     = "http://localhost:3000/mcp"
 
 def extract_snapshot_path(text: str) -> str | None:
-    """Extract the snapshot file path from markdown link like [Snapshot](.playwright-mcp\page-xxx.yml)"""
     match = re.search(r'\[Snapshot\]\(([^)]+)\)', text)
     if match:
         return match.group(1)
