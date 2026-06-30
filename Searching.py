@@ -20,7 +20,6 @@ def extract_snapshot_path(text: str) -> str | None:
     return None
 
 def find_and_read_snapshot_file(filename: str) -> str:
-    """Search for a specific snapshot file in .playwright-mcp folders."""
     current_dir = os.getcwd()
     while True:
         candidate = os.path.join(current_dir, ".playwright-mcp", filename)
@@ -35,7 +34,6 @@ def find_and_read_snapshot_file(filename: str) -> str:
     return ""
 
 def find_and_read_latest_snapshot() -> str:
-    """Search for the latest snapshot file in .playwright-mcp folders."""
     current_dir = os.getcwd()
     latest_file = None
     latest_mtime = 0
