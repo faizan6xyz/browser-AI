@@ -442,8 +442,7 @@ def run_agent(goal: str, start_url: str) -> str:
                 mcp.call_tool("browser_wait_for", {"time": 3})
                 break 
             else:
-                print("  [Error] Plan said click but no ref provided.")   
-                
+                print("  [Error] Plan said click but no ref provided.")         
         elif action == "navigate":
             url = plan.get("url")
             if url:
@@ -460,7 +459,6 @@ def run_agent(goal: str, start_url: str) -> str:
             break
     else:
         print("\nMax steps reached. Goal may not be achieved.")
-
     mcp.stop()
     return current_url
 if __name__ == "__main__":
