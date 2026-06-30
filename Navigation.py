@@ -460,10 +460,9 @@ def run_agent(goal: str, start_url: str) -> str:
             break
     else:
         print("\nMax steps reached. Goal may not be achieved.")
-        
+
     mcp.stop()
     return current_url
-
 if __name__ == "__main__":
     goal = input("Enter your goal : ").strip()
     start_url = input("Starting URL    : ").strip()
