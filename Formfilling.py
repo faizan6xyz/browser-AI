@@ -6,10 +6,8 @@ import time
 import requests
 from openai import OpenAI
 from dotenv import load_dotenv
-
 load_dotenv()
 API_key = os.getenv("API_key")
-
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
     api_key=API_key 
