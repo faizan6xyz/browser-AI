@@ -1,20 +1,18 @@
 import os
 from openai import OpenAI
 import json
-# file imports 
+# file imports
 from Searching import run_agent1
 from Extract_text import extract_page_to_markdown
-from Navigation import run_agent
+from Navigation import run_agent, navi
 from typeing import run_agent2
 from dotenv import load_dotenv
 MODEL_NAME = "meta/llama-3.3-70b-instruct"
-
 load_dotenv()
 API_key = os.getenv("API_key")
-
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key=API_key 
+    api_key=API_key
 )
 def get_next_step(goal, current_state, previous_steps):
     system_prompt = """
@@ -38,8 +36,8 @@ ABSOLUTE GROUNDING RULE (read this twice)
 Every "target" you output for click/type MUST be a ref string that appears
 VERBATIM, character-for-character, in the Current State below. If you cannot find
 an exact match, you MUST NOT invent, guess, reuse an old ref, or modify one.
-In that case, output "navigate" instead. 
-Don't use type and click in for search , just use search action for it . 
+In that case, output "navigate" instead.
+Don't use type and click in for search , just use search action for it .
 
 ═══════════════════════════════════════════
 ACTION REFERENCE — exact field usage per action
@@ -76,6 +74,7 @@ FINAL REMINDER
 - "target" for click/type must be copied verbatim from Current State — never fabricated.
 - If the same target/action was just attempted with no change in Current State, choose "finish" with value "false" instead of repeating it.
 """.format(goal=goal)
+
     steps_history = "\n".join([f"{i+1}. {step}" for i, step in enumerate(previous_steps)]) if previous_steps else "No steps taken yet."
     user_prompt = f"""
     Goal: {goal}
@@ -91,7 +90,7 @@ FINAL REMINDER
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.2, # Low temperature for deterministic planning
+            temperature=0.2,  # Low temperature for deterministic planning
             max_tokens=150
         )
         content = response.choices[0].message.content
@@ -104,11 +103,9 @@ def humanize_step(step_json):
         data = json.loads(step_json)
     except (json.JSONDecodeError, TypeError):
         return f"Unrecognized step output: {step_json}"
-
     action = data.get("action")
     target = data.get("target")
     value = data.get("value")
-
     if action == "navigate":
         return f"go to {target}"
     elif action == "click":
@@ -130,54 +127,68 @@ def humanize_step(step_json):
             return "Finish — goal not achieved or blocked"
     else:
         return f"Unknown action: {action}"
+def get_page_snapshot(current_url):
+    try:
+        return extract_page_to_markdown(current_url)
+    except Exception as e:
+        print(f"Could not capture snapshot: {e}")
+        return f"Unable to capture state at {current_url}"
 steps = []
 human = []
-
 def execute_automation(goal, max_steps=10):
-    print(f" Starting Automation for Goal: '{goal}'\n")
+    print(f"Starting Automation for Goal: '{goal}'\n")
+    current_url = "about:blank"  # wherever your browser session actually starts
     current_state = "Browser is open on homepage."
     previous_steps = []
     for i in range(max_steps):
         print(f"--- Step {i+1} ---")
         next_step_json = get_next_step(goal, current_state, previous_steps)
-        steps.append(next_step_json)
         if not next_step_json:
             print("Failed to get a valid step from the LLM.")
-            break     
-        print(f" LLM Decision: {next_step_json}")
+            break
+        steps.append(next_step_json)
         previous_steps.append(next_step_json)
+        print(f"LLM Decision: {next_step_json}")
         human_step = humanize_step(next_step_json)
         human.append(human_step)
-        print(f" Human-readable: {human_step}")
-
-        if '"finish"' in next_step_json.lower():
-            print(" Goal achieved! Automation complete.")
+        print(f"Human-readable: {human_step}")
+        try:
+            data = json.loads(next_step_json)
+        except (json.JSONDecodeError, TypeError):
+            print("Could not parse step JSON, stopping.")
             break
-        current_state = f"Completed step {i+1}. Ready for next action."
-        print(f"State updated: {current_state}\n")
-from Navigation import navi
+        action = data.get("action")
+        target = data.get("target")
+        value = data.get("value")
+        if action == "finish":
+            print("Model signalled finish — stopping.")
+            break
+        try:
+            if action == "navigate":
+                current_url = navi(target)
+            elif action == "click":
+                current_url = run_agent(human_step, current_url)
+            elif action == "search":
+                current_url = run_agent1(human_step, current_url)
+            elif action == "type":
+                current_url = run_agent2(human_step, current_url)
+            elif action == "extract_text" or action == "extract_files":
+                current_url = extract_page_to_markdown(current_url)
+            elif action == "scroll":
+                print("Scroll action not yet wired to an executor — skipping.")
+            else:
+                print(f"Unknown action '{action}', stopping.")
+                break
+        except Exception as e:
+            print(f"Execution failed for action '{action}': {e}")
+            break
+        current_state = get_page_snapshot(current_url)
+        print("New state captured for next planning step.\n")
+    return steps, human
 if __name__ == "__main__":
     user_goal = input("Whats your goal : ")
     execute_automation(user_goal)
     print("\nRaw steps:", steps)
     print("\nHuman-readable steps:")
-    lasturl = ""
-    for h in human:  # h is a list of strings
+    for h in human:
         print(f"- {h}")
-    for h in human:  # h is a list of strings
-        if "navigate" in h :
-            lasturl = h.strip().replace("navigate", "").strip()
-            navi(lasturl)
-        if "go" in h : 
-            lasturl = h.strip().replace("go to", "").strip()
-            navi(lasturl)
-        if "click" in h :
-            lasturl = run_agent(h,lasturl)
-        if "Search" in h :
-            lasturl = run_agent1(h,lasturl)
-        if "search" in h :
-            lasturl = run_agent1(h,lasturl)
-        if "type" in h :
-            lasturl = run_agent2(h,lasturl)
-        if "text" in h : 
-            lasturl = extract_page_to_markdown(lasturl)
