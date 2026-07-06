@@ -7,13 +7,16 @@ from Extract_text import extract_page_to_markdown
 from Navigation import run_agent, navi
 from typeing import run_agent2
 from dotenv import load_dotenv
-MODEL_NAME = "meta/llama-3.3-70b-instruct"
+
+MODEL_NAME = "meta/llama-3.1-8b-instruct"
 load_dotenv()
 API_key = os.getenv("API_key")
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
     api_key=API_key
 )
+
+
 def get_next_step(goal, current_state, previous_steps):
     system_prompt = """
 You are a Browser Automation Step Planner. Your ONLY job is to output the SINGLE next
@@ -70,6 +73,8 @@ Format reference only — do not copy these values, they are placeholders:
 ═══════════════════════════════════════════
 FINAL REMINDER
 ═══════════════════════════════════════════
+- sign in is not allowed as a step
+- search 'none' is not allowed as a step 
 - Output ONE JSON object. No markdown fences. No text before or after it.
 - "target" for click/type must be copied verbatim from Current State — never fabricated.
 - If the same target/action was just attempted with no change in Current State, choose "finish" with value "false" instead of repeating it.
@@ -91,13 +96,23 @@ FINAL REMINDER
                 {"role": "user", "content": user_prompt}
             ],
             temperature=0.2,  # Low temperature for deterministic planning
-            max_tokens=150
+            max_tokens=300     # bumped up so long refs don't get truncated mid-JSON
         )
-        content = response.choices[0].message.content
-        return content.strip()
+        content = response.choices[0].message.content.strip()
+
+        # Strip markdown code fences in case the model ignores the "no fences" instruction
+        if content.startswith("```"):
+            content = content.strip("`")
+            if content.lower().startswith("json"):
+                content = content[4:]
+            content = content.strip()
+
+        return content
     except Exception as e:
         print(f"Error calling NVIDIA NIM: {e}")
         return None
+
+
 def humanize_step(step_json):
     try:
         data = json.loads(step_json)
@@ -111,7 +126,7 @@ def humanize_step(step_json):
     elif action == "click":
         return f"click {target}"
     elif action == "type":
-        return f"Type '{value}' into element {target})"
+        return f"Type '{value}' into element {target}"
     elif action == "search":
         return f"search '{value}'"
     elif action == "scroll":
@@ -127,53 +142,74 @@ def humanize_step(step_json):
             return "Finish — goal not achieved or blocked"
     else:
         return f"Unknown action: {action}"
+
+
 def get_page_snapshot(current_url):
     try:
         return extract_page_to_markdown(current_url)
     except Exception as e:
         print(f"Could not capture snapshot: {e}")
         return f"Unable to capture state at {current_url}"
-steps = []
-human = []
+
+
 def execute_automation(goal, max_steps=10):
+    # Local (not global/module-level) state so repeated calls in the same
+    # process don't accumulate steps/human from previous runs.
+    steps = []
+    human = []
+
     print(f"Starting Automation for Goal: '{goal}'\n")
-    current_url = "about:blank"  # wherever your browser session actually starts
+    current_url = "https://mail.google.com/mail/u/0/#inbox"  # wherever your browser session actually starts
     current_state = "Browser is open on homepage."
     previous_steps = []
+
     for i in range(max_steps):
         print(f"--- Step {i+1} ---")
         next_step_json = get_next_step(goal, current_state, previous_steps)
         if not next_step_json:
             print("Failed to get a valid step from the LLM.")
             break
+
         steps.append(next_step_json)
         previous_steps.append(next_step_json)
         print(f"LLM Decision: {next_step_json}")
+
         human_step = humanize_step(next_step_json)
         human.append(human_step)
         print(f"Human-readable: {human_step}")
+
         try:
             data = json.loads(next_step_json)
         except (json.JSONDecodeError, TypeError):
-            print("Could not parse step JSON, stopping.")
+            print(f"Could not parse step JSON, stopping. Raw output was: {next_step_json!r}")
             break
+
         action = data.get("action")
         target = data.get("target")
         value = data.get("value")
+
         if action == "finish":
             print("Model signalled finish — stopping.")
             break
+
         try:
             if action == "navigate":
                 current_url = navi(target)
             elif action == "click":
-                current_url = run_agent(human_step, current_url)
+                # Pass the structured target directly to the executor instead of
+                # the humanized string, so it doesn't have to re-parse it.
+                current_url = run_agent(target, current_url)
             elif action == "search":
-                current_url = run_agent1(human_step, current_url)
+                current_url = run_agent1(value, current_url)
             elif action == "type":
-                current_url = run_agent2(human_step, current_url)
+                current_url = run_agent2(target, value, current_url)
             elif action == "extract_text" or action == "extract_files":
-                current_url = extract_page_to_markdown(current_url)
+                # Don't overwrite current_url with page content — keep the URL
+                # intact and store the extracted content separately.
+                extracted_content = extract_page_to_markdown(current_url)
+                current_state = extracted_content
+                print("New state captured for next planning step.\n")
+                continue
             elif action == "scroll":
                 print("Scroll action not yet wired to an executor — skipping.")
             else:
@@ -182,13 +218,17 @@ def execute_automation(goal, max_steps=10):
         except Exception as e:
             print(f"Execution failed for action '{action}': {e}")
             break
+
         current_state = get_page_snapshot(current_url)
         print("New state captured for next planning step.\n")
+
     return steps, human
+
+
 if __name__ == "__main__":
     user_goal = input("Whats your goal : ")
-    execute_automation(user_goal)
-    print("\nRaw steps:", steps)
+    all_steps, all_human = execute_automation(user_goal)
+    print("\nRaw steps:", all_steps)
     print("\nHuman-readable steps:")
-    for h in human:
+    for h in all_human:
         print(f"- {h}")

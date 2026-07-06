@@ -7,7 +7,7 @@ from Extract_text import extract_page_to_markdown
 from Navigation import run_agent
 from typeing import run_agent2
 from dotenv import load_dotenv
-MODEL_NAME = "meta/llama-3.3-70b-instruct"
+MODEL_NAME = "meta/llama-3.1-8b-instruct"
 
 load_dotenv()
 API_key = os.getenv("API_key")
@@ -72,6 +72,7 @@ Format reference only — do not copy these values, they are placeholders:
 ═══════════════════════════════════════════
 FINAL REMINDER
 ═══════════════════════════════════════════
+- Search could be none in any case , search none is not Allowed
 - Output ONE JSON object. No markdown fences. No text before or after it.
 - "target" for click/type must be copied verbatim from Current State — never fabricated.
 - If the same target/action was just attempted with no change in Current State, choose "finish" with value "false" instead of repeating it.
