@@ -7,7 +7,7 @@ from Extract_text import extract_page_to_markdown
 from Navigation import run_agent
 from typeing import run_agent2
 from dotenv import load_dotenv
-MODEL_NAME = "meta/llama-3.1-8b-instruct"
+MODEL_NAME = "nvidia/llama-3.1-nemotron-nano-8b-v1"
 
 load_dotenv()
 API_key = os.getenv("API_key")
@@ -38,44 +38,94 @@ ABSOLUTE GROUNDING RULE (read this twice)
 Every "target" you output for click/type MUST be a ref string that appears
 VERBATIM, character-for-character, in the Current State below. If you cannot find
 an exact match, you MUST NOT invent, guess, reuse an old ref, or modify one.
-In that case, output "navigate" instead. 
-Don't use type and click in for search , just use search action for it . 
+In that case, output "navigate" instead.
+
+Do NOT use "click" or "type" for search boxes. Always use "search" for that.
 
 ═══════════════════════════════════════════
-ACTION REFERENCE — exact field usage per action
+ACTION REFERENCE — every field below is REQUIRED in every response,
+even when a value doesn't apply. Use the literal string "none" (not JSON null,
+not an empty string) for any field that doesn't apply to the chosen action.
 ═══════════════════════════════════════════
 | action        | target                          | value              |
 |---------------|----------------------------------|--------------------|
-| navigate      | full https:// URL               | null               |
-| click         | exact ref from Current State     | null               |
+| navigate      | full https:// URL               | "none"             |
+| click         | exact ref from Current State     | "none"             |
 | type          | exact ref from Current State     | text to type       |
 | search        | exact ref of search input        | search query text  |
 | scroll        | "up" or "down"                   | pixels (integer)   |
-| extract_text  | null                             | null               |
-| extract_files | null                             | null               |
-| finish        | null                             | "true" or "false"  |
+| extract_text  | "none"                          | "none"             |
+| extract_files | "none"                          | "none"             |
+| finish        | "none"                          | "true" or "false"  |
 
-Use "finish" when:
-- The goal is visibly satisfied in the Current State main content (not sidebar/nav), → value "true"
-- A CAPTCHA or other unrecoverable block appears (NOT a login wall — you are already authenticated, so treat any login prompt as a rendering artifact, not a real block), → value "false"
-- The same action would just repeat with no new information, → value "false"
+STRICT RULES ON VALUES:
+- For "search", value must be a real, non-empty search query string relevant to
+  the goal. value "None", "", "null", or a placeholder like "search query" is
+  NEVER allowed for the search action.
+- For "type", value must be real text to type — never "none" or empty.
+- Never output the JSON literal `null` anywhere in your response. Use the
+  string "none" instead, exactly as shown in the table.
+
+═══════════════════════════════════════════
+WORKED EXAMPLES (these are illustrative only — never copy the refs/values below,
+always use the ACTUAL refs and content from the real Current State you are given)
+═══════════════════════════════════════════
+Example 1 — grounded click:
+Current State shows: `[ref=e14] button "Add to Cart"`
+Correct output:
+{{"action": "click", "target": "e14", "value": "none"}}
+
+Example 2 — search:
+Current State shows: `[ref=e3] textbox "Search products"`
+Goal: find wireless headphones
+Correct output:
+{{"action": "search", "target": "e3", "value": "wireless headphones"}}
+
+Example 3 — no matching ref exists yet:
+Goal: check today's weather in Paris
+Current State: blank/unrelated page, no relevant elements
+Correct output:
+{{"action": "navigate", "target": "https://www.google.com/search?q=weather+in+paris", "value": "none"}}
+
+Example 4 — goal already satisfied:
+Current State main content clearly shows the requested information/result.
+Correct output:
+{{"action": "finish", "target": "none", "value": "true"}}
+
+═══════════════════════════════════════════
+USE "finish" WHEN
+═══════════════════════════════════════════
+- The goal is visibly satisfied in the Current State main content (not sidebar/nav) → value "true"
+- A CAPTCHA or other unrecoverable block appears (NOT a login wall — you are
+  already authenticated, so treat any login prompt as a rendering artifact,
+  not a real block) → value "false"
+- The same action would just repeat with no new information → value "false"
 
 ═══════════════════════════════════════════
 OUTPUT SCHEMA (respond with exactly this, nothing else)
 ═══════════════════════════════════════════
-{{"action": "<one of the 8 above>", "target": "<see table or null>"}}
+{{"action": "<one of the 8 actions above>", "target": "<see table>", "value": "<see table>"}}
 
-Format reference only — do not copy these values, they are placeholders:
-{{"action": "click", "target": "REF_FROM_STATE"}}
-{{"action": "finish", "target": null }}
+═══════════════════════════════════════════
+BEFORE YOU RESPOND, SELF-CHECK (do this silently, do not output this checklist)
+═══════════════════════════════════════════
+1. Does my JSON have exactly three keys: action, target, value? If not, fix it.
+2. Did I use the string "none" instead of null/empty anywhere it's required? If not, fix it.
+3. If action is "search" or "type", is value a real, specific, non-empty string? If not, fix it.
+4. If action is "click" or "type", does target match a ref VERBATIM from Current
+   State? If not, change action to "navigate" instead.
+5. Is my output ONLY the JSON object — no markdown fences, no explanation, no
+   text before or after it?
 
 ═══════════════════════════════════════════
 FINAL REMINDER
 ═══════════════════════════════════════════
-- Search could be none in any case , search none is not Allowed
-- Output ONE JSON object. No markdown fences. No text before or after it.
+- Output ONE JSON object with all three keys: action, target, value.
+- Never output JSON `null` — use the string "none" for inapplicable fields.
 - "target" for click/type must be copied verbatim from Current State — never fabricated.
-- If the same target/action was just attempted with no change in Current State, choose "finish" with value "false" instead of repeating it.
+- "search" and "type" must always have a real, non-empty value — never "none".
+- If the same target/action was just attempted with no change in Current State,
+  choose "finish" with value "false" instead of repeating it.
 """.format(goal=goal)
     steps_history = "\n".join([f"{i+1}. {step}" for i, step in enumerate(previous_steps)]) if previous_steps else "No steps taken yet."
     user_prompt = f"""
