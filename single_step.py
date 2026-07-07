@@ -102,6 +102,7 @@ USE "finish" WHEN
   already authenticated, so treat any login prompt as a rendering artifact,
   not a real block) → value "false"
 - The same action would just repeat with no new information → value "false"
+- Check if the goal is acheived in every single step , and tell why you think goal acheived (reason)
 
 ═══════════════════════════════════════════
 OUTPUT SCHEMA (respond with exactly this, nothing else)
