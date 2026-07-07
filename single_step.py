@@ -118,6 +118,7 @@ BEFORE YOU RESPOND, SELF-CHECK (do this silently, do not output this checklist)
    State? If not, change action to "navigate" instead.
 5. Is my output ONLY the JSON object — no markdown fences, no explanation, no
    text before or after it?
+6. check before every step did you completed the goal , if completed then the action be finish
 
 ═══════════════════════════════════════════
 FINAL REMINDER
