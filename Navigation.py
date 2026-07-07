@@ -266,6 +266,7 @@ You will be shown the current page's accessibility snapshot (elements, refs, tex
 5. Always include a short "reason" field explaining the choice.
 6. Do not repeat an identical action you have already taken if the page did not change — choose "done" with success false instead.
 7. check for the whole page not just the main content area , if the element on side bar or any other palce than main content area then click it 
+8. for click choose the ref where cursor=pointer is there
 
 ## OUTPUT FORMAT (strict)
 {{"action": "<click|navigate|done>", "ref": "<only for click>", "url": "<only for navigate>", "success": <only for done, true/false>, "reason": "<short reason>"}}
@@ -344,7 +345,6 @@ DECISION PROCESS:
 2. Look at the Main Content Area (not the sidebar). What is displayed there?
 3. If Main Content shows regular files/folders → FAIL (Still on My Drive).
 4. If Main Content shows deleted items/empty state → SUCCESS.
-5. choose the ref where cursor=pointer is there
 
 Reply with ONLY a JSON object:
 {{"success": true/false, "reason": "Explain strictly. Mention the URL path and what is in the MAIN CONTENT area. If you only see a sidebar link, say 'Only saw sidebar link, main content is still [X]'."}}
