@@ -18,14 +18,15 @@ client = OpenAI(
 NIM_MODEL = "meta/llama-3.1-8b-instruct"
 MCP_BASE = "http://localhost:3000/mcp"
 MAX_NAV_STEPS = 3
+matches = []
 
 
 def extract_snapshot_path(text: str) -> str | None:
     match = re.search(r"\[Snapshot\]\(([^)]+)\)", text)
     return match.group(1) if match else None
 
-
 def find_and_read_snapshot_file(filename: str) -> str:
+    matches.clear()
     current_dir = os.getcwd()
     while True:
         candidate = os.path.join(current_dir, ".playwright-mcp", filename)
@@ -36,7 +37,8 @@ def find_and_read_snapshot_file(filename: str) -> str:
                 lines = [line.strip() for line in x if line.strip()]
                 for i, line in enumerate(lines, 1):
                     if "textbox" in line or "combobox" in line :
-                        return line 
+                        matches.append(line)
+                return matches 
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
             break
@@ -429,7 +431,7 @@ def run_agent2(goal: str, start_url: str):
 
 
 if __name__ == "__main__":
-    # goal = input("Enter your goal : ").strip()
-    # start_url = input("Starting URL    : ").strip()
-    # run_agent2(goal, start_url)
-    print(find_and_read_snapshot_file("page-2026-07-08T20-02-25-774Z.yml"))
+    goal = input("Enter your goal : ").strip()
+    start_url = input("Starting URL    : ").strip()
+    run_agent2(goal, start_url)
+    # print(find_and_read_snapshot_file("page-2026-07-08T20-02-25-774Z.yml"))

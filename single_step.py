@@ -258,8 +258,9 @@ def execute_automation(goal, max_steps=10):
             elif action == "extract_text" or action == "extract_files":
                 # Don't overwrite current_url with page content — keep the URL
                 # intact and store the extracted content separately.
-                extracted_content = extract_page_to_markdown(current_url)
-                current_state = extracted_content
+                
+                # extracted_content = extract_page_to_markdown(current_url)
+                # current_state = extracted_content
                 print("New state captured for next planning step.\n")
                 continue
             elif action == "scroll":

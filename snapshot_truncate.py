@@ -5,6 +5,6 @@ def read_yaml_lines(filepath):
 def fileread (name):
     lines = read_yaml_lines(name)
     for i, line in enumerate(lines, 1):
-        if "[cursor=pointer]" in line :
+        if "textbox" in line or "combobox" in line :
             print(f"Line {i}: {line}")
-        
+fileread(r".playwright-mcp\page-2026-07-08T19-46-12-101Z.yml")
