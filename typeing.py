@@ -36,9 +36,9 @@ def find_and_read_snapshot_file(filename: str) -> str:
                 x = f.readlines()
                 lines = [line.strip() for line in x if line.strip()]
                 for i, line in enumerate(lines, 1):
-                    if "textbox" in line or "combobox" in line :
+                    if isinstance(line, str) and ("textbox" in line or "combobox" in line):
                         matches.append(line)
-                return matches 
+                return  ", ".join(matches)
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
             break
@@ -434,4 +434,3 @@ if __name__ == "__main__":
     goal = input("Enter your goal : ").strip()
     start_url = input("Starting URL    : ").strip()
     run_agent2(goal, start_url)
-    # print(find_and_read_snapshot_file("page-2026-07-08T20-02-25-774Z.yml"))
