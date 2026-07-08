@@ -57,7 +57,11 @@ def find_and_read_latest_snapshot() -> str:
         print(f"    [found snapshot file: {latest_file}]")
         time.sleep(0.2) # Ensure file write completion
         with open(latest_file, "r", encoding="utf-8") as f:
-            return f.read()
+                x = f.readlines()
+                lines = [line.strip() for line in x if line.strip()]
+                for i, line in enumerate(lines, 1):
+                    if "[cursor=pointer]" in line :
+                        return line 
     return ""
 
 QUERY_EXTRACT_PROMPT = """Extract just the search query from the user's goal.

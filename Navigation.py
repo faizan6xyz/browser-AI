@@ -32,7 +32,11 @@ def find_and_read_snapshot_file(filename: str) -> str:
         if os.path.exists(candidate):
             time.sleep(0.2)
             with open(candidate, "r", encoding="utf-8") as f:
-                return f.read()
+                x = f.readlines()
+                lines = [line.strip() for line in x if line.strip()]
+                for i, line in enumerate(lines, 1):
+                    if "[cursor=pointer]" in line :
+                        return line 
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
             break
