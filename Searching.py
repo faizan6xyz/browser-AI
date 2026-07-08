@@ -63,7 +63,6 @@ def find_and_read_latest_snapshot() -> str:
                     if "[cursor=pointer]" in line :
                         return line 
     return ""
-
 QUERY_EXTRACT_PROMPT = """Extract just the search query from the user's goal.
 Strip away phrases like "search for", "on youtube", "on google", site names, etc.
 Reply with ONLY the search query text, nothing else.
