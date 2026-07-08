@@ -35,7 +35,7 @@ def find_and_read_snapshot_file(filename: str) -> str:
                 x = f.readlines()
                 lines = [line.strip() for line in x if line.strip()]
                 for i, line in enumerate(lines, 1):
-                    if "[cursor=pointer]" in line :
+                    if "textbox" in line or "combobox" in line :
                         return line 
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
@@ -254,7 +254,9 @@ describing what text to type and into which element.
 Find the INPUT element the user is referring to.
 Look for elements with roles like 'combobox', 'textbox', 'searchbox', or 'input'.
 Match it to the element name or label mentioned in the user's instruction.
+pick the element which the user ask for , match the label from user instructions
 Prefer elements marked [cursor=pointer] when multiple candidates could match.
+
 
 Extract:
 - ref: the EXACT ref string from the snapshot for the matching input element (e.g. "e42")
@@ -275,7 +277,7 @@ def plan_navigation_step(goal: str, snapshot: str) -> dict:
             model=NIM_MODEL,
             messages=[
                 {"role": "system", "content": NAV_PLANNER_PROMPT},
-                {"role": "user", "content": f"Instruction: {goal}\n\nSnapshot:\n{snapshot[:15000]}"},
+                {"role": "user", "content": f"Instruction: {goal}\n\nSnapshot:\n{snapshot[:]}"},
             ],
             max_tokens=200,
             temperature=0,
@@ -320,12 +322,15 @@ CRITICAL VERIFICATION RULES:
      If these are present, you are NOT in the Inbox list anymore. You are in the email view.
    - "Inbox List": Look for a list of rows with checkboxes and short summaries.
 
+
 DECISION PROCESS:
 1. Look at the URL. Does it match the goal? (e.g., /trash for Bin)
 2. Look at the Main Content Area (not the sidebar). What is displayed there?
 3. If Main Content shows regular files/folders → FAIL (Still on My Drive).
 4. If Main Content shows deleted items/empty state → SUCCESS.
-5. choose the ref where cursor=pointer is there
+5. choose the ref where cursor=pointer is there 
+6. if the element doesnt match the user instruction ask yourself what to click
+7. if the desired element by user prompt is not actvie then also click it 
 
 Reply with ONLY a JSON object:
 {{"success": true/false, "reason": "Explain strictly. Mention the URL path and what is in the MAIN CONTENT area. If you only see a sidebar link, say 'Only saw sidebar link, main content is still [X]'."}}
@@ -424,6 +429,7 @@ def run_agent2(goal: str, start_url: str):
 
 
 if __name__ == "__main__":
-    goal = input("Enter your goal : ").strip()
-    start_url = input("Starting URL    : ").strip()
-    run_agent2(goal, start_url)
+    # goal = input("Enter your goal : ").strip()
+    # start_url = input("Starting URL    : ").strip()
+    # run_agent2(goal, start_url)
+    print(find_and_read_snapshot_file("page-2026-07-08T20-02-25-774Z.yml"))
