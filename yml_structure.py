@@ -1,6 +1,7 @@
 import re
-def new(filename):
-    listt=[]
+listt=[]
+def username(filename):
+    listt.clear()
     if not  filename :  
         print("empty snapshot")
     with open(filename , "r", encoding="utf-8") as f :
@@ -13,7 +14,21 @@ def new(filename):
                 full_content = match.group(1) 
                 username = full_content.split("'s")[0]
                 listt.append(username)
-    return listt
+def search(filename):
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :     
+        if 'textbox' in item :
+            match = re.search(r'ref=(\w+)', item)
+            if match:
+                searchref = match.group(1)
+            return searchref
+
+   
+    
         
-        
-print(new(r".playwright-mcp/page-2026-07-09T22-41-34-999Z.yml"))
+username(r".playwright-mcp/x.yml")
+print(listt)
+print(search(r".playwright-mcp/x.yml"))
