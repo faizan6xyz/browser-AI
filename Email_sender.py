@@ -7,10 +7,12 @@ import requests
 from openai import OpenAI
 import threading
 from dotenv import load_dotenv
-
+import pandas as pd
 load_dotenv()
 API_key = os.getenv("API_key")
-
+# for multiple Mail sending
+# email = pd.read_csv("Email.csv")   
+# mail_recipt = email["recipt"] 
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
     api_key=API_key
@@ -364,6 +366,7 @@ def run_agent2(goal: str, start_url: str):
             break
 
         print(f"[INFO] Filling form - To: {recipients}, Subject: {Subject}, Body: {Body}, Send: {submit}")
+        # for item in mail_recipt :                     for multiple people mail
         mcp.call_tool("browser_type", {
             "target": recipients,
             "text": "test@example.com",
