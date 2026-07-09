@@ -61,7 +61,7 @@ def ative(name):
     recipients = Subject = Body = Send = None
 
     for item in text_list:
-        if "recipients" in item or "To" in item or "to" in item.lower():
+        if "recipients" in item and "combobox" in item:
             match = re.search(r'ref=(\w+)', item)
             if match:
                 recipients = match.group(1)
@@ -364,7 +364,6 @@ def run_agent2(goal: str, start_url: str):
             break
 
         print(f"[INFO] Filling form - To: {recipients}, Subject: {Subject}, Body: {Body}, Send: {submit}")
-        
         mcp.call_tool("browser_type", {
             "target": recipients,
             "text": "test@example.com",
