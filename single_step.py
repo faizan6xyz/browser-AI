@@ -120,7 +120,7 @@ BEFORE YOU RESPOND, SELF-CHECK (do this silently, do not output this checklist)
 5. Is my output ONLY the JSON object — no markdown fences, no explanation, no
    text before or after it?
 6. check before every step did you completed the goal , if completed then the action be finish
-
+7. use steps like human like : click grog , click sent , click liked videos , type thoughtpod in message , type thoughtpod in body , search hello , search hi , navigate to https://www.youtube.com/ , navigate to https://mail.google.com/mail/u/0/#inbox , open the recent mail by nvidia , open recent mail by groq 
 ═══════════════════════════════════════════
 FINAL REMINDER
 ═══════════════════════════════════════════
@@ -259,8 +259,8 @@ def execute_automation(goal, max_steps=10):
                 # Don't overwrite current_url with page content — keep the URL
                 # intact and store the extracted content separately.
                 
-                # extracted_content = extract_page_to_markdown(current_url)
-                # current_state = extracted_content
+                extracted_content = extract_page_to_markdown(current_url)
+                current_state = extracted_content
                 print("New state captured for next planning step.\n")
                 continue
             elif action == "scroll":

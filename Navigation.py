@@ -24,19 +24,21 @@ MAX_NAV_STEPS = 3
 def extract_snapshot_path(text: str) -> str | None:
     match = re.search(r"\[Snapshot\]\(([^)]+)\)", text)
     return match.group(1) if match else None
-
+matches = []
 def find_and_read_snapshot_file(filename: str) -> str:
+    matches.clear()
     current_dir = os.getcwd()
     while True:
         candidate = os.path.join(current_dir, ".playwright-mcp", filename)
         if os.path.exists(candidate):
             time.sleep(0.2)
             with open(candidate, "r", encoding="utf-8") as f:
-                x = f.readlines()
+                x = f.read()
                 lines = [line.strip() for line in x if line.strip()]
                 for i, line in enumerate(lines, 1):
-                    if "[cursor=pointer]" in line :
-                        return line 
+                    if isinstance(line, str) and ("[cursor=pointer]" in line) :
+                        matches.append(line)
+                return  ", ".join(matches) 
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
             break

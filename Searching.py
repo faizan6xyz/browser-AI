@@ -22,15 +22,21 @@ def extract_snapshot_path(text: str) -> str | None:
     if match:
         return match.group(1)
     return None
-
+matches = []
 def find_and_read_snapshot_file(filename: str) -> str:
+    matches.clear()
     current_dir = os.getcwd()
     while True:
         candidate = os.path.join(current_dir, ".playwright-mcp", filename)
         if os.path.exists(candidate):
             time.sleep(0.2)              # Wait briefly to ensure file is fully written
             with open(candidate, "r", encoding="utf-8") as f:
-                return f.read()
+                x = f.readlines()
+                lines = [line.strip() for line in x if line.strip()]
+                for i, line in enumerate(lines, 1):
+                    if isinstance(line, str) and ("textbox" in line or "combobox" in line or "searchbox" in line):
+                        matches.append(line)
+                return  ", ".join(matches)
         parent = os.path.dirname(current_dir)
         if parent == current_dir:
             break
