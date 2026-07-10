@@ -312,8 +312,7 @@ def run_agent2(goal: str, start_url: str):
 
     # Navigate first to generate initial snapshot
     print("\n--- Initial Navigation ---")
-    mcp.call_tool("browser_navigate", {"url": start_url})
-    time.sleep(5)
+    time.sleep(2)
     
     # Take snapshot and capture filename
     print("\n--- Taking Initial Snapshot ---")
@@ -394,4 +393,4 @@ def run_agent2(goal: str, start_url: str):
 
     mcp.stop()
 if __name__ == "__main__":
-    run_agent2("email", "https://www.instagram.com/p/Daa05e0o-eT/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==")
+    run_agent2("email", "https://www.instagram.com/direct/t/18075902687207564/")
