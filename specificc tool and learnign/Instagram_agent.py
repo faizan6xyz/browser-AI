@@ -20,7 +20,8 @@ client = OpenAI(
 NIM_MODEL = "meta/llama-3.1-8b-instruct"
 MCP_BASE = "http://localhost:3000/mcp"
 MAX_NAV_STEPS = 3
-
+listt=[]
+search = chat = send  = message = scroll = None
 matches = []
 snapshot_filenames = []   # renamed from `filename` — now stores actual filenames, not content
 
@@ -41,7 +42,6 @@ def extract_snapshot_path(text: str) -> str | None:
 matches1 = []
 
 def find_and_read_snapshot_file(fname: str) -> list:
-    """Returns ALL lines from the snapshot file for debugging."""
     matches1.clear()
     current_dir = os.getcwd()
     while True:
@@ -57,38 +57,102 @@ def find_and_read_snapshot_file(fname: str) -> list:
             break
         current_dir = parent
     return []
-def ative(name):
-    text_list = find_and_read_snapshot_file(name)
 
-    recipients = Subject = Body = Send = None
-
-    for item in text_list:
-        if "recipients" in item and "combobox" in item:
+def username(filename):
+    listt.clear()
+    global search , chat , send , message , scroll
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :        
+        if 'link' in item and 'profile picture' in item and '[cursor=pointer]' in item and user not in item:
+            pattern = r'link \"([^"]+)\''
+            match = re.search(pattern, item)
+            if match:
+                full_content = match.group(1) 
+                username = full_content.split("'s")[0]
+                listt.append(username) 
+    return list(set(listt)) # return the unique
+                
+def searchref(filename):
+    global search
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis : 
+        if 'textbox' in item :
             match = re.search(r'ref=(\w+)', item)
             if match:
-                recipients = match.group(1)
-                print(recipients, "recipients")
-        if "Subject" in item or "subject" in item.lower():
-            match = re.search(r'ref=(\w+)', item)
+                search = match.group(1)
+                return search
+                
+def messageref(filename):
+    global message
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :
+        if "                - button" in item and "[cursor=pointer]" in item :
+            item.strip()
+            pattern = r'\[ref=([a-zA-Z0-9]+)\]'
+            match = re.search(pattern, item)
             if match:
-                Subject = match.group(1)
-                print(Subject, "Subject")
-        if "Body" in item or "body" in item.lower() or "message" in item.lower():
-            match = re.search(r'ref=(\w+)', item)
+                message = match.group(1)
+                return message
+                
+def chatref(filename):
+    global chat
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :
+        if "                - textbox [active]" in item :
+            item.strip()
+            pattern = r'\[ref=([a-zA-Z0-9]+)\]'
+            match = re.search(pattern, item)
             if match:
-                Body = match.group(1)
-                print(Body, "Body")
-        if "Send" in item and "[cursor=pointer]" in item and "options" not in item:
-            match = re.search(r'ref=(\w+)', item)
+                chat = match.group(1)
+                return chat 
+            
+def sendref(filename):
+    global send
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :
+        if "Send" in item and "send" in item and "[cursor=pointer]" in item :
+            item.strip()
+            pattern = r'\[ref=([a-zA-Z0-9]+)\]'
+            match = re.search(pattern, item)
             if match:
-                Send = match.group(1)
-                print(Send, "Send")
+                send = match.group(1)
+                return send
 
-    if None in (recipients, Subject, Body, Send):
-        print(f"[ative] WARNING: some fields not found -> "
-              f"recipients={recipients}, Subject={Subject}, Body={Body}, Send={Send}")
 
-    return recipients, Subject, Body, Send
+def scrollref(filename):
+    lastvalue = "none"
+    flag = True
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis:
+        if flag :
+            if 'link' in item and 'profile picture' in item and 'malik_esticxs'not  in item and "dontstockbitch" not in item:
+                flag = False
+                prev.strip()
+                pattern = r'\[ref=([a-zA-Z0-9]+)\]'
+                match = re.search(pattern, prev)
+                if match:
+                    scroll = match.group(1)
+                    return scroll
+            prev = lastvalue 
+            lastvalue = item
 
 
 def find_and_read_latest_snapshot() -> str:
@@ -350,7 +414,7 @@ def run_agent2(goal: str, start_url: str):
         snapshot = mcp.call_tool("browser_snapshot", {})
         if not snapshot or snapshot == "Snapshot empty.":
             snapshot = find_and_read_latest_snapshot()
-        
+            
         if not snapshot:
             print("STUCK: Could not get snapshot.")
             break
@@ -359,14 +423,10 @@ def run_agent2(goal: str, start_url: str):
         latest_filename = snapshot_filenames[-1]
         print(f"[INFO] Using snapshot: {latest_filename}")
         
-        recipients, Subject, Body, submit = ative(latest_filename)
-
-        if None in (recipients, Subject, Body, submit):
-            print("STUCK: Could not locate one or more form fields in snapshot.")
-            print(f"  recipients={recipients}, Subject={Subject}, Body={Body}, Send={submit}")
-            break
-
-        print(f"[INFO] Filling form - To: {recipients}, Subject: {Subject}, Body: {Body}, Send: {submit}")
+        scroll1 = scrollref(latest_filename)
+        if None in (scroll1):
+            print(f"STUCK: Could not locate one or more form fields in snapshot . scrool ref = {scroll1}")
+            
         # for item in mail_recipt :                     for multiple people mail
         mcp.call_tool("browser_type", {
             "target": recipients,
