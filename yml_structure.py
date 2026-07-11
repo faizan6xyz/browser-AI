@@ -55,6 +55,20 @@ def chattype(filename):
             if match:
                 chat = match.group(1)
                 return chat
+            
+def send(filename):
+    if not  filename :  
+        print("empty snapshot")
+    with open(filename , "r", encoding="utf-8") as f :
+        lis = [item for item in f.readlines()]
+    for item in lis :
+        if "Send" in item and "send" in item and "[cursor=pointer]" in item :
+            item.strip()
+            pattern = r'\[ref=([a-zA-Z0-9]+)\]'
+            match = re.search(pattern, item)
+            if match:
+                chat = match.group(1)
+                return chat
                         
 # username(r".playwright-mcp/x.yml")
 # print(listt)
