@@ -1,52 +1,70 @@
 # browser-AI
 
-An LLM-driven browser automation agent. An 8B model (NVIDIA NIM — `nvidia/llama-3.1-nemotron-nano-8b-v1`) plans one step at a time toward a natural-language goal, and a set of dedicated executor scripts (via a Playwright MCP server) carry out that step — navigate, click, type, search, scroll, or extract content — until the goal is finished or blocked.
+An LLM-driven browser automation agent. It plans one step at a time toward a natural-language goal, then executes that step in a real Chrome browser via the Playwright MCP server over the Chrome DevTools Protocol (CDP).
 
-Rather than giving the LLM free-form tool calling, this project uses a **hardcoded step-executor pattern**: the planner outputs a single strict JSON action, a router dispatches it to the matching script, and the loop repeats with updated page state. This trades some flexibility for reliability, which matters a lot when the planner is a small 8B model.
+Instead of hard-coded scripts, the agent looks at the current page state, decides the single next action (navigate, click, type, search, scroll, extract, or finish), and hands that action off to a dedicated executor module. Steps repeat until the goal is satisfied or the run is stopped.
 
 ## How it works
 
-1. **`Workflow.py`** — the orchestrator. Feeds the goal, current page state, and history of previous steps to the planner LLM, gets back a single JSON action, converts it to a human-readable string, and routes it to the right executor. Loops until `finish` or `max_steps` is hit.
-2. **Planner LLM** — constrained to output exactly one of 8 actions per turn: `navigate`, `click`, `type`, `search`, `scroll`, `extract_text`, `extract_files`, `finish`. Grounding rule: any `click`/`type` target must be a ref string that appears verbatim in the current accessibility-tree snapshot — if it doesn't, the planner is forced to `navigate` instead of hallucinating a target.
-3. **Executors** (each talks to the browser through a Playwright MCP server):
-   - `Navigation.py` — navigate / click / finish actions
-   - `Searching.py` — search-box interactions
-   - `typeing.py` — typing into form fields
-   - `Extract_text.py` — extracts page content to Markdown
-   - `Formfilling.py` — form filling (work in progress, not yet wired into the main loop)
-4. **`single_step.py`** — a standalone harness for testing a single planner step / executor call in isolation, without running the full loop.
+1. **`Workflow.py`** is the orchestrator. It sends the goal + current page state + step history to an LLM (via the NVIDIA NIM API) and asks for exactly one next step back as JSON: `{"action": ..., "target": ..., "value": ...}`.
+2. That JSON step is converted into a human-readable instruction (e.g. `"click e14"`, `"search 'wireless headphones'"`).
+3. Based on the action type, `Workflow.py` dispatches to the matching executor:
+   - **`Navigation.py`** – navigate to a URL, click an element, or finish the run
+   - **`Searching.py`** – fill and submit search boxes
+   - **`typeing.py`** – type text into a given element
+   - **`Extract_text.py`** – pull the current page's content out as markdown
+4. Every "target" the model outputs for click/type must be a `ref` that appears verbatim in the current page snapshot — the prompt is written to force this grounding and fall back to `navigate` if no matching ref exists, instead of letting the model hallucinate a selector.
+5. The loop continues (up to `max_steps`) until the model returns `finish`.
 
-## Repo layout
+## Project structure
 
 ```
-Workflow.py           # orchestrator + planner prompt + step router
-Navigation.py          # navigate / click / finish executor
-Searching.py           # search executor
-typeing.py             # type executor
-Extract_text.py        # page -> markdown extraction
-Formfilling.py          # form filling (WIP)
-single_step.py          # single-step debug harness
-HTTP_workflow.txt        # notes on the HTTP/SSE MCP transport setup
-explain.txt              # architecture notes + known 404/session bugs
-File management/         # separate agent: file ops with a Gradio UI
-Research Agent/           # separate agent: ReAct-style web research agent
+browser-AI/
+├── Workflow.py          # Orchestrator: LLM planning loop + step dispatch
+├── Navigation.py        # navigate / click / finish execution over MCP
+├── Searching.py         # search-box execution
+├── typeing.py           # type-into-element execution
+├── Extract_text.py      # page -> markdown extraction
+├── Formfilling.py       # form-filling (in progress, not yet working)
+├── single_step.py        # standalone single-step runner / debugging harness
+├── HTTP_workflow.txt     # notes on the MCP HTTP call flow
+├── explain.txt           # design notes + known 404/session bug write-up
+├── File management/      # related file-manager agent
+└── Research Agent/        # related research agent
 ```
+
+## Requirements
+
+- Python 3.10+
+- Google Chrome, launched with remote debugging enabled (default setup uses port `9222`)
+- A running [Playwright MCP](https://github.com/microsoft/playwright-mcp) server connected to that Chrome instance via `--cdp-endpoint`
+- An NVIDIA NIM API key (used to call the planning model, e.g. `nvidia/llama-3.1-nemotron-nano-8b-v1`)
+
+Python packages:
+```
+openai
+python-dotenv
+```
+*(plus whatever MCP client library `Navigation.py` / `Searching.py` / `typeing.py` use to talk to the MCP server — add it here once pinned)*
 
 ## Setup
 
-```bash
-git clone https://github.com/faizan6xyz/browser-AI.git
-cd browser-AI
-pip install openai python-dotenv
-```
-
-You'll also need a running **Playwright MCP server** (stdio, HTTP, or SSE transport — see `HTTP_workflow.txt` for the HTTP/SSE setup notes) that the executor scripts connect to for actual browser control.
-
-Create a `.env` file:
-
-```
-API_key=your_nvidia_nim_api_key
-```
+1. Launch Chrome with a remote debugging port and a dedicated profile:
+   ```bash
+   chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chrome-debug-profile"
+   ```
+2. Start the Playwright MCP server pointed at that CDP endpoint:
+   ```bash
+   npx @playwright/mcp@latest --cdp-endpoint http://localhost:9222
+   ```
+3. Create a `.env` file in the project root:
+   ```
+   API_key=your_nvidia_nim_api_key
+   ```
+4. Install Python dependencies:
+   ```bash
+   pip install openai python-dotenv
+   ```
 
 ## Usage
 
@@ -54,18 +72,35 @@ API_key=your_nvidia_nim_api_key
 python Workflow.py
 ```
 
-You'll be prompted for a goal (e.g. `find the cheapest flight from Delhi to Mumbai next Friday`). The agent will print each planned step, its human-readable translation, and execute it until it finishes or hits the step limit.
+You'll be prompted for a goal in plain English:
+
+```
+Whats your goal : find the cheapest flight from Delhi to Mumbai next Friday
+```
+
+The agent will print each planned step, its human-readable form, and then execute it in the connected Chrome window.
 
 ## Known issues
 
-- **MCP session 404s**: the Playwright MCP session sometimes drops immediately after handshake, particularly when running in `--cdp-endpoint` mode (connecting to an already-running Chrome via remote debugging). This mode doesn't reliably persist session state across separate HTTP requests. See `explain.txt` for the full breakdown of suspected causes (stale server processes, session-ID rotation races, short server-side timeouts).
-- **Form filling** isn't wired into the main loop yet.
+- **Recurring 404 on tool calls after a successful handshake.** The MCP session appears to establish (`initialize` succeeds) but the very first real tool call afterward can 404. Suspected causes, in order of likelihood:
+  1. `--cdp-endpoint` mode not reliably persisting session state across separate HTTP requests.
+  2. A stale/zombie MCP server process from a previous run still bound to the port, so `initialize` and the follow-up `tools/call` land on different processes.
+  3. A race between the `initialize` response and the `notifications/initialized` call not capturing a rotated session ID.
+  4. An aggressively short server-side session timeout (less likely, since the 404 shows up almost immediately).
+- **Form filling isn't wired up yet** — `Formfilling.py` exists but isn't integrated into the main workflow loop.
 
-## Sub-projects
+## Roadmap
 
-- **`File management/`** — a separate file-management agent with a Gradio UI and per-action confirmation before any file operation runs.
-- **`Research Agent/`** — a ReAct-style research agent using DuckDuckGo search + NVIDIA NIM for multi-step web research.
+- Fix MCP session persistence / reconnect handling
+- Integrate `Formfilling.py` into the main loop
+- Add retry/backoff around MCP tool calls
+- Add automated logging of full step + state history per run
+
+## Related agents in this repo
+
+- **`Research Agent/`** – a NIM-backed research agent built on the same agentic-loop pattern
+- **`File management/`** – a file-manager agent, also NIM-backed
 
 ## License
 
-No license specified yet — all rights reserved by default until one is added.
+Add a license of your choice (MIT recommended for personal/portfolio projects).
