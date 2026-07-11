@@ -18,7 +18,7 @@ def username(filename):
                 full_content = match.group(1) 
                 username = full_content.split("'s")[0]
                 listt.append(username) 
-    return listt
+    return list(set(listt)) # return the unique
                 
 def searchref(filename):
     global search
