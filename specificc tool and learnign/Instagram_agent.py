@@ -427,31 +427,7 @@ def run_agent2(goal: str, start_url: str):
         if None in (scroll1):
             print(f"STUCK: Could not locate one or more form fields in snapshot . scrool ref = {scroll1}")
             
-        # for item in mail_recipt :                     for multiple people mail
-        mcp.call_tool("browser_type", {
-            "target": recipients,
-            "text": "test@example.com",
-            "slowly": False,
-        })
-        time.sleep(0.5)
-
-        mcp.call_tool("browser_type", {
-            "target": Subject,
-            "text": "Test Subject",
-            "slowly": False,
-        })
-        time.sleep(0.5)
-
-        mcp.call_tool("browser_type", {
-            "target": Body,
-            "text": "Test body content",
-            "slowly": False,
-        })
-        time.sleep(0.5)
-
-        print("[INFO] Clicking send...")
-        mcp.call_tool("browser_click", {"target": submit})
-        mcp.call_tool("browser_wait_for", {"time": 2})
+        
 
     mcp.stop()
 if __name__ == "__main__":
