@@ -6,9 +6,13 @@ from Toolsusingduck import search_deep , search_news , search_web
 import sys
 sys.path.append("..")  # path to the folder containing indexer.py
 from Rag_create import build_index
+from dotenv import load_dotenv
+load_dotenv()
+API_key = os.getenv("API_key")
+
 client = OpenAI(
   base_url = "https://integrate.api.nvidia.com/v1",
-  api_key = "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"
+  api_key = API_key
 )
 NIM_MODEL = "meta/llama-3.1-8b-instruct"
 TOOLS = {
